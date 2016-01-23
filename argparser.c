@@ -7,15 +7,10 @@
 // Create new argparser
 argparser argparser_create(int argc, char* argv[]) {
     size_t init_cap = 5;
-    int i;
 
     argparser ap;
     ap.argc = argc;
-    ap.argv = malloc(sizeof(char*) * argc);
-    for (i = 0; i < argc; i++) {
-        ap.argv[i] = calloc(strlen(argv[i]) + 1, sizeof(char));
-        strcpy(ap.argv[i], argv[i]);
-    }
+    ap.argv = argv;
     ap.args = calloc(init_cap, sizeof(argstruct));
     ap.size = 0;
     ap.cap  = init_cap;
@@ -25,10 +20,6 @@ argparser argparser_create(int argc, char* argv[]) {
 
 // Destroy argparser args
 void argparser_destroy(argparser* ap) {
-    int i;
-    for (i = 0; i < ap->argc; i++)
-        free(ap->argv[i]);
-    free(ap->argv);
     free(ap->args);
 }
 
