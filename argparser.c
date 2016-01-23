@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 // Create new argparser
 argparser argparser_create(int argc, char* argv[]) {
@@ -57,5 +58,28 @@ void argparser_add(argparser* ap, char shortarg[], char longarg[], Argtype type,
 
 // Parse arguments
 void argparser_parse(argparser* ap) {
+    int i, j;
+    for (i = 0; i < ap->argc; i++) {
+        for (j = 0; j < ap->size; j++) {
+            argstruct as = ap->args[j];
+            int shortmatch = strcmp(ap->argv[i], as.shortarg) == 0;
+            int longmatch  = strcmp(ap->argv[i], as.longarg) == 0;
+            if (shortmatch || longmatch) {
+                // Assign arg, if applicable
+                if (as.arg) {
+                    switch (as.type) {
+                    case ARGTYPE_INT:
+                        *(int*)as.arg = atoi(ap->argv[i+1]);
+                        i++;
+                        break;
+                    }
+                }
 
+                // Call callback, if applicable
+                if (as.callback) {
+                    as.callback();
+                }
+            }
+        }
+    }
 }

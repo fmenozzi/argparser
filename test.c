@@ -18,7 +18,7 @@ void argprint(argparser* ap) {
 }
 
 int main(int argc, char* argv[]) {
-    int num;
+    int num = 0;
 
     argparser ap = argparser_create(argc, argv);
 
@@ -27,6 +27,10 @@ int main(int argc, char* argv[]) {
     argparser_add(&ap, "-n", "--num",     ARGTYPE_INT,  &num, NULL);
 
     argprint(&ap);
+
+    argparser_parse(&ap);
+
+    printf("num is now %d\n", num);
 
     argparser_destroy(&ap);
 
