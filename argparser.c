@@ -70,6 +70,8 @@ void argparser_parse(argparser* ap) {
                     case ARGTYPE_STRING:
                         strcpy((char*)as.arg, ap->argv[++i]);
                         break;
+                    case ARGTYPE_VOID:
+                        *(int*)as.arg += 1;
                     default:
                         ;
                     }
