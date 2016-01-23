@@ -1,13 +1,12 @@
 #include <stdio.h>
 
-#include "argstruct.h"
-#include "argvec.h"
+#include "argparser.h"
 
-void printvec(argvec* vec) {
+void printargs(argparser* ap) {
     int i;
-    for (i = 0; i < vec->cap; i++)
-        printf("%d ", argvec_at(vec, i).data);
-    printf("\nsize: %lu, cap: %lu\n\n", vec->size, vec->cap);
+    for (i = 0; i < ap->cap; i++)
+        printf("%d ", argparser_at(ap, i).data);
+    printf("\nsize: %lu, cap: %lu\n\n", ap->size, ap->cap);
 }
 
 argstruct as(int data) {
@@ -16,20 +15,20 @@ argstruct as(int data) {
 }
 
 int main() {
-    argvec av = argvec_create(5);
+    argparser av = argparser_create(5);
 
     int i;
     for (i = 0; i < 6; i++) {
-        argvec_add(&av, as(i));
-        printvec(&av);
+        argparser_add(&av, as(i));
+        printargs(&av);
     }
     
     for (i = 6; i < 21; i++) {
-        argvec_add(&av, as(i));
-        printvec(&av);
+        argparser_add(&av, as(i));
+        printargs(&av);
     }
 
-    argvec_destroy(&av);
+    argparser_destroy(&av);
 
     return 0;
 }
