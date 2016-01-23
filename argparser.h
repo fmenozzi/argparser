@@ -14,6 +14,5 @@ typedef struct {
 argparser argparser_create();
 void argparser_destroy(argparser* ap);
 void argparser_add(argparser* ap, char shortarg[], char longarg[], Argtype type, void* arg, void (*callback)());
-argstruct argparser_at(argparser* ap, size_t i);
 
 #endif

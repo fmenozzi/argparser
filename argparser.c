@@ -44,8 +44,3 @@ void argparser_add(argparser* ap, char shortarg[], char longarg[], Argtype type,
         memset(ap->args + ap->size, 0, sizeof(argstruct) * (new_cap - ap->size));
     }
 }
-
-// Retrieve element from argparser
-argstruct argparser_at(argparser* ap, size_t i) {
-    return ap->args[i];
-}
