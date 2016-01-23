@@ -2,33 +2,30 @@
 
 #include "argparser.h"
 
-void printargs(argparser* ap) {
-    int i;
-    for (i = 0; i < ap->cap; i++)
-        printf("%d ", argparser_at(ap, i).data);
-    printf("\nsize: %lu, cap: %lu\n\n", ap->size, ap->cap);
+void help_func() {
+    printf("You passed the help verbose\n");
 }
 
-argstruct as(int data) {
-    argstruct a = {data};
-    return a;
+void verbose_func() {
+    printf("You passed the verbose flag\n");
+}
+
+void argprint(argparser* ap) {
+    int i;
+    for (i = 0; i < ap->size; i++) {
+        printf("Passed: %s, %s\n", ap->args[i].shortarg, ap->args[i].longarg);
+    }
 }
 
 int main() {
-    argparser av = argparser_create(5);
+    argparser ap = argparser_create();
 
-    int i;
-    for (i = 0; i < 6; i++) {
-        argparser_add(&av, as(i));
-        printargs(&av);
-    }
-    
-    for (i = 6; i < 21; i++) {
-        argparser_add(&av, as(i));
-        printargs(&av);
-    }
+    argparser_add(&ap, "-h", "--help", ARGTYPE_VOID, NULL, help_func);
+    argparser_add(&ap, "-v", "--verbose", ARGTYPE_VOID, NULL, verbose_func);
 
-    argparser_destroy(&av);
+    argprint(&ap);
+
+    argparser_destroy(&ap);
 
     return 0;
 }

@@ -22,7 +22,14 @@ void argparser_destroy(argparser* ap) {
 }
 
 // Add arg to argparser
-void argparser_add(argparser* ap, argstruct as) {
+void argparser_add(argparser* ap, char shortarg[], char longarg[], Argtype type, void* arg, void (*callback)()) {
+    argstruct as;
+    strcpy(as.shortarg, shortarg);
+    strcpy(as.longarg, longarg);
+    as.type     = type;
+    as.arg      = arg;
+    as.callback = callback;
+
     if (ap->size < ap->cap) {
         ap->args[ap->size++] = as;
     } else {
