@@ -62,8 +62,10 @@ void argparser_parse(argparser* ap) {
     for (i = 0; i < ap->argc; i++) {
         for (j = 0; j < ap->size; j++) {
             argstruct as = ap->args[j];
+
             int shortmatch = strcmp(ap->argv[i], as.shortarg) == 0;
             int longmatch  = strcmp(ap->argv[i], as.longarg) == 0;
+
             if (shortmatch || longmatch) {
                 // Assign arg, if applicable
                 if (as.arg) {
@@ -72,13 +74,20 @@ void argparser_parse(argparser* ap) {
                         *(int*)as.arg = atoi(ap->argv[i+1]);
                         i++;
                         break;
+                    case ARGTYPE_DOUBLE:
+                        *(double*)as.arg = atof(ap->argv[i+1]);
+                        i++;
+                    case ARGTYPE_STRING:
+                        strcpy((char*)as.arg, ap->argv[i+1]);
+                        i++;
+                    default:
+                        ;
                     }
                 }
 
                 // Call callback, if applicable
-                if (as.callback) {
+                if (as.callback)
                     as.callback();
-                }
             }
         }
     }

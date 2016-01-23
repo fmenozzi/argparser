@@ -6,6 +6,8 @@
 typedef enum {
     ARGTYPE_VOID,
     ARGTYPE_INT,
+    ARGTYPE_DOUBLE,
+    ARGTYPE_STRING,
 } Argtype;
 
 // TODO: Either use malloc or come up with better default sizes
