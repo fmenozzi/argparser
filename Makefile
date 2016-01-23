@@ -10,3 +10,6 @@ all: test
 
 test:
 	$(CC_DEBUG) $(INC) $(SRC) -o test
+
+clean:
+	@rm -rf test
