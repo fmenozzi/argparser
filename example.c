@@ -3,7 +3,7 @@
 #include "argparser.h"
 
 void help_func() {
-    printf("You passed the help verbose\n");
+    printf("You passed the help flag\n");
 }
 
 void verbose_func() {
