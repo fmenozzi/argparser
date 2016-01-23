@@ -17,10 +17,10 @@ void argprint(argparser* ap) {
     }
 }
 
-int main() {
+int main(int argc, char* argv[]) {
     int num;
 
-    argparser ap = argparser_create();
+    argparser ap = argparser_create(argc, argv);
 
     argparser_add(&ap, "-h", "--help",    ARGTYPE_VOID, NULL, help_func);
     argparser_add(&ap, "-v", "--verbose", ARGTYPE_VOID, NULL, verbose_func);
