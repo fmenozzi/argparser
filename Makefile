@@ -6,10 +6,10 @@ CC_RELEASE = @$(CC) -O3
 SRC = *.c
 INC = *.h
 
-all: test
+all: example 
 
-test:
-	$(CC_DEBUG) $(INC) $(SRC) -o test
+exmaple:
+	$(CC_DEBUG) $(INC) $(SRC) -o example 
 
 clean:
 	@rm -rf test
