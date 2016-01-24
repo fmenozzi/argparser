@@ -3,9 +3,9 @@ Simple command line parser for C/C++ programs. Use `make example` to run example
 The API is quite simple, with only four functions: `argparser_create`, `argparser_add`, `argparser_parse`, and `argparser_destroy`
 
 ### argparser_create
-Takes system arguments (i.e. `argc` and `argv`) and returns an `argparser` object
+Takes system arguments (i.e. `argc` and `argv`) and a parse mode and returns an `argparser` object. Parse mode is either `PARSE_STRICT`, where the program exits if all args haven't been supplied, or `PARSE_LENIENT`, which will allow unspecified args.
 
-    argparser ap = argparser_create(argc, argv);
+    argparser ap = argparser_create(argc, argv, PARSE_LENIENT);
     
 ### argparser_destroy
 Destroys an `argparser` object
