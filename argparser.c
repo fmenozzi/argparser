@@ -120,6 +120,6 @@ void argparser_parse(argparser* ap) {
 
     // Call callbacks, if applicable
     for (i = 0; i < ap->size; i++)
-        if (ap->args[i].callback)
+        if (ap->args[i].callback && ap->args[i].parsed)
             ap->args[i].callback();
 }
