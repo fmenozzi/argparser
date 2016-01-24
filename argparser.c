@@ -21,18 +21,26 @@ argparser argparser_create(int argc, char* argv[], Parsetype type) {
 
 // Destroy argparser args
 void argparser_destroy(argparser* ap) {
+    int i;
+    for (i = 0; i < ap->size; i++) {
+        free(ap->args[i].shortarg);
+        free(ap->args[i].longarg);
+    }
     free(ap->args);
 }
 
 // Add arg to argparser
 void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Argtype type, void* arg, void (*callback)()) {
     argstruct as;
-    strcpy(as.shortarg, shortarg);
-    strcpy(as.longarg, longarg);
+    as.shortarg = malloc(strlen(shortarg) + 1);
+    as.longarg  = malloc(strlen(longarg) + 1);
     as.type     = type;
     as.arg      = arg;
     as.callback = callback;
     as.parsed   = 0;
+
+    strcpy(as.shortarg, shortarg);
+    strcpy(as.longarg, longarg);
 
     if (ap->size < ap->cap) {
         ap->args[ap->size++] = as;

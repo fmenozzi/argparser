@@ -19,10 +19,9 @@ typedef enum {
     PARSE_LENIENT,
 } Parsetype;
 
-// TODO: Either use malloc or come up with better default sizes
 typedef struct {
-    char shortarg[10];
-    char longarg[20];
+    char* shortarg;
+    char* longarg;
     Argtype type;
     void* arg;
     void (*callback)();
