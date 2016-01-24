@@ -1,4 +1,4 @@
-Simple command line parser for C programs. Use `make example` to run example code.
+Simple command line parser for C/C++ programs. Use `make example` to run example code.
 
 The API is quite simple, with only four functions: `argparser_create`, `argparser_add`, `argparser_parse`, and `argparser_destroy`
 
