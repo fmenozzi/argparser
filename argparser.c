@@ -62,12 +62,18 @@ void argparser_parse(argparser* ap) {
                 if (as.arg) {
                     switch (as.type) {
                     case ARGTYPE_INT:
+                        if (i+1 >= ap->argc)
+                            break;
                         *(int*)as.arg = atoi(ap->argv[++i]);
                         break;
                     case ARGTYPE_DOUBLE:
+                        if (i+1 >= ap->argc)
+                            break;
                         *(double*)as.arg = atof(ap->argv[++i]);
                         break;
                     case ARGTYPE_STRING:
+                        if (i+1 >= ap->argc)
+                            break;
                         strcpy((char*)as.arg, ap->argv[++i]);
                         break;
                     case ARGTYPE_VOID:
