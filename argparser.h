@@ -14,6 +14,11 @@ typedef enum {
     ARGTYPE_STRING,
 } Argtype;
 
+typedef enum {
+    PARSE_STRICT,
+    PARSE_LENIENT,
+} Parsetype;
+
 // TODO: Either use malloc or come up with better default sizes
 typedef struct {
     char shortarg[10];
@@ -21,17 +26,19 @@ typedef struct {
     Argtype type;
     void* arg;
     void (*callback)();
+    int parsed;
 } argstruct;
 
 typedef struct {
     int argc;
     char** argv;
+    Parsetype type;
     argstruct* args;
     size_t size;
     size_t cap;
 } argparser;
 
-argparser argparser_create(int argc, char* argv[]);
+argparser argparser_create(int argc, char* argv[], Parsetype type);
 void argparser_destroy(argparser* ap);
 void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Argtype type, void* arg, void (*callback)());
 void argparser_parse(argparser* ap);

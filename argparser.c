@@ -5,12 +5,13 @@
 #include <stdio.h>
 
 // Create new argparser
-argparser argparser_create(int argc, char* argv[]) {
+argparser argparser_create(int argc, char* argv[], Parsetype type) {
     size_t init_cap = 5;
 
     argparser ap;
     ap.argc = argc;
     ap.argv = argv;
+    ap.type = type;
     ap.args = (argstruct*)calloc(init_cap, sizeof(argstruct));
     ap.size = 0;
     ap.cap  = init_cap;
@@ -31,6 +32,7 @@ void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Arg
     as.type     = type;
     as.arg      = arg;
     as.callback = callback;
+    as.parsed   = 0;
 
     if (ap->size < ap->cap) {
         ap->args[ap->size++] = as;
@@ -52,38 +54,64 @@ void argparser_parse(argparser* ap) {
     int i, j;
     for (i = 0; i < ap->argc; i++) {
         for (j = 0; j < ap->size; j++) {
-            argstruct as = ap->args[j];
+            argstruct* as = &(ap->args[j]);
 
-            int shortmatch = strcmp(ap->argv[i], as.shortarg) == 0;
-            int longmatch  = strcmp(ap->argv[i], as.longarg) == 0;
+            int shortmatch = strcmp(ap->argv[i], as->shortarg) == 0;
+            int longmatch  = strcmp(ap->argv[i], as->longarg) == 0;
 
             if (shortmatch || longmatch) {
                 // Assign arg, if applicable
-                if (as.arg) {
-                    switch (as.type) {
+                if (as->arg) {
+                    switch (as->type) {
                     case ARGTYPE_INT:
-                        if (i+1 < ap->argc)
-                            *(int*)as.arg = atoi(ap->argv[++i]);
+                        if (i+1 < ap->argc) {
+                            *(int*)as->arg = atoi(ap->argv[++i]);
+                            as->parsed = 1;
+                        }
                         break;
                     case ARGTYPE_DOUBLE:
-                        if (i+1 < ap->argc)
-                            *(double*)as.arg = atof(ap->argv[++i]);
+                        if (i+1 < ap->argc) {
+                            *(double*)as->arg = atof(ap->argv[++i]);
+                            as->parsed = 1;
+                        }
                         break;
                     case ARGTYPE_STRING:
-                        if (i+1 < ap->argc)
-                            strcpy((char*)as.arg, ap->argv[++i]);
+                        if (i+1 < ap->argc) {
+                            strcpy((char*)as->arg, ap->argv[++i]);
+                            as->parsed = 1;
+                        }
                         break;
                     case ARGTYPE_VOID:
-                        *(int*)as.arg += 1;
+                        *(int*)as->arg += 1;
+                        as->parsed = 1;
                     default:
                         ;
                     }
+                } else if (as->type == ARGTYPE_VOID) {
+                    as->parsed = 1;
                 }
-
-                // Call callback, if applicable
-                if (as.callback)
-                    as.callback();
             }
         }
     }
+
+    // If strict, make sure all args were passed
+    if (ap->type == PARSE_STRICT) {
+        int failed = 0;
+        for (i = 0; i < ap->size; i++) {
+            argstruct as = ap->args[i];
+            if (!as.parsed) {
+                fprintf(stderr, "Failed to provide arg %s, %s\n", as.shortarg, as.longarg);
+                failed = 1;
+            }
+        }
+        if (failed) {
+            argparser_destroy(ap);
+            exit(-1);
+        }
+    }
+
+    // Call callbacks, if applicable
+    for (i = 0; i < ap->size; i++)
+        if (ap->args[i].callback)
+            ap->args[i].callback();
 }
