@@ -1,6 +1,10 @@
 #ifndef ARGPARSER_H_ 
 #define ARGPARSER_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdlib.h>
 
 typedef enum {
@@ -29,7 +33,11 @@ typedef struct {
 
 argparser argparser_create(int argc, char* argv[]);
 void argparser_destroy(argparser* ap);
-void argparser_add(argparser* ap, char shortarg[], char longarg[], Argtype type, void* arg, void (*callback)());
+void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Argtype type, void* arg, void (*callback)());
 void argparser_parse(argparser* ap);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

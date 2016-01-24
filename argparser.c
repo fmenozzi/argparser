@@ -11,7 +11,7 @@ argparser argparser_create(int argc, char* argv[]) {
     argparser ap;
     ap.argc = argc;
     ap.argv = argv;
-    ap.args = calloc(init_cap, sizeof(argstruct));
+    ap.args = (argstruct*)calloc(init_cap, sizeof(argstruct));
     ap.size = 0;
     ap.cap  = init_cap;
 
@@ -24,7 +24,7 @@ void argparser_destroy(argparser* ap) {
 }
 
 // Add arg to argparser
-void argparser_add(argparser* ap, char shortarg[], char longarg[], Argtype type, void* arg, void (*callback)()) {
+void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Argtype type, void* arg, void (*callback)()) {
     argstruct as;
     strcpy(as.shortarg, shortarg);
     strcpy(as.longarg, longarg);
@@ -37,7 +37,7 @@ void argparser_add(argparser* ap, char shortarg[], char longarg[], Argtype type,
     } else {
         size_t new_cap = ap->cap * 2;
 
-        ap->args = realloc(ap->args, new_cap * sizeof(argstruct));
+        ap->args = (argstruct*)realloc(ap->args, new_cap * sizeof(argstruct));
         ap->size = ap->size + 1;
         ap->cap  = new_cap;
 
