@@ -17,7 +17,7 @@ typedef enum {
 typedef enum {
     PARSE_STRICT,
     PARSE_LENIENT,
-} Parsetype;
+} Parsemode;
 
 typedef struct {
     char* shortarg;
@@ -31,13 +31,13 @@ typedef struct {
 typedef struct {
     int argc;
     char** argv;
-    Parsetype type;
+    Parsemode mode;
     argstruct* args;
     size_t size;
     size_t cap;
 } argparser;
 
-argparser argparser_create(int argc, char* argv[], Parsetype type);
+argparser argparser_create(int argc, char* argv[], Parsemode mode);
 void argparser_destroy(argparser* ap);
 void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Argtype type, void* arg, void (*callback)());
 void argparser_parse(argparser* ap);

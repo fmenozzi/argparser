@@ -5,13 +5,13 @@
 #include <stdio.h>
 
 // Create new argparser
-argparser argparser_create(int argc, char* argv[], Parsetype type) {
+argparser argparser_create(int argc, char* argv[], Parsemode mode) {
     size_t init_cap = 5;
 
     argparser ap;
     ap.argc = argc;
     ap.argv = argv;
-    ap.type = type;
+    ap.mode = mode;
     ap.args = (argstruct*)calloc(init_cap, sizeof(argstruct));
     ap.size = 0;
     ap.cap  = init_cap;
@@ -103,7 +103,7 @@ void argparser_parse(argparser* ap) {
     }
 
     // If strict, make sure all args were passed
-    if (ap->type == PARSE_STRICT) {
+    if (ap->mode== PARSE_STRICT) {
         int failed = 0;
         for (i = 0; i < ap->size; i++) {
             argstruct as = ap->args[i];
