@@ -62,7 +62,7 @@ void argparser_parse(argparser* ap) {
     int i, j;
     for (i = 0; i < ap->argc; i++) {
         for (j = 0; j < ap->size; j++) {
-            argstruct* as = &(ap->args[j]);
+            argstruct* as = &ap->args[j];
 
             int shortmatch = strcmp(ap->argv[i], as->shortarg) == 0;
             int longmatch  = strcmp(ap->argv[i], as->longarg) == 0;
