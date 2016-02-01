@@ -14,6 +14,15 @@ void string_func() {
     printf("Non-void args can have callbacks too!\n");
 }
 
+/*
+ * For arguments that take values (such as -d --double), you can 
+ * use any of the following formats:
+ *
+ *      ./example -d 3
+ *      ./example -d=3
+ *      ./example --double 3
+ *      ./example --double=3
+ */
 int main(int argc, char* argv[]) {
     int i = 0;
     double d = 0.0;
