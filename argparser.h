@@ -15,8 +15,8 @@ typedef enum {
 } Argtype;
 
 typedef enum {
-    PARSE_STRICT,
-    PARSE_LENIENT,
+    PARSEMODE_STRICT,
+    PARSEMODE_LENIENT,
 } Parsemode;
 
 typedef struct {

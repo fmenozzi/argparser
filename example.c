@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
     printf("d is now %f\n", d);
     printf("s is now %s\n\n", s);
 
-    argparser ap = argparser_create(argc, argv, PARSE_LENIENT);
+    argparser ap = argparser_create(argc, argv, PARSEMODE_LENIENT);
 
     argparser_add(&ap, "-h", "--help",    ARGTYPE_VOID,   NULL, help_func);
     argparser_add(&ap, "-v", "--verbose", ARGTYPE_VOID,   NULL, verbose_func);

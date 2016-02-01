@@ -103,7 +103,7 @@ void argparser_parse(argparser* ap) {
     }
 
     // If strict, make sure all args were passed
-    if (ap->mode== PARSE_STRICT) {
+    if (ap->mode== PARSEMODE_STRICT) {
         int failed = 0;
         for (i = 0; i < ap->size; i++) {
             argstruct as = ap->args[i];
