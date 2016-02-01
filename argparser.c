@@ -70,7 +70,7 @@ argparser argparser_create(int argc, char* argv[], Parsemode mode) {
 }
 
 // Destroy argparser args
-void argparser_destroy(argparser* ap) {
+static void argparser_destroy(argparser* ap) {
     int i;
 
     for (i = 0; i < ap->size; i++) {
@@ -177,4 +177,7 @@ void argparser_parse(argparser* ap) {
     for (i = 0; i < ap->size; i++)
         if (ap->args[i].callback && ap->args[i].parsed)
             ap->args[i].callback();
+
+    // Cleanup
+    argparser_destroy(ap);
 }

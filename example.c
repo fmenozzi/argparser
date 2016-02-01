@@ -49,7 +49,5 @@ int main(int argc, char* argv[]) {
     printf("s is now %s\n", s);
     printf("p flag passed? %s\n", p ? "yes" : "no");
 
-    argparser_destroy(&ap);
-
     return 0;
 }

@@ -38,7 +38,6 @@ typedef struct {
 } argparser;
 
 argparser argparser_create(int argc, char* argv[], Parsemode mode);
-void argparser_destroy(argparser* ap);
 void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Argtype type, void* arg, void (*callback)());
 void argparser_parse(argparser* ap);
 
