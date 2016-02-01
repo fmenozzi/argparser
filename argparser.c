@@ -4,9 +4,59 @@
 #include <string.h>
 #include <stdio.h>
 
+// Find index of a char in a string
+static int indexof(char* str, char c) {
+    int i;
+    for (i = 0; i < strlen(str); i++)
+        if (str[i] == c)
+            return i;
+    return -1;
+}
+
+// Reformat argv to allow for --arg=val
+static char** remove_equals(int* argc, char* argv[]) {
+    // Find new argc
+    int old_argc = *argc;
+    int new_argc = old_argc;
+    int i, j;
+    for (i = 0; i < old_argc; i++)
+        if (indexof(argv[i], '=') != -1)
+            new_argc++;
+
+    // Allocate new argv
+    char** new_argv = (char**)malloc(new_argc * sizeof(char*));
+    for (i = 0, j = 0; i < old_argc; i++) {
+        int len = strlen(argv[i]);
+        int idx = indexof(argv[i], '=');
+        if (idx != -1) {
+            new_argv[j]   = (char*)calloc(idx + 1,         1);
+            new_argv[j+1] = (char*)calloc((len-idx-1) + 1, 1);
+
+            memcpy(new_argv[j],   argv[i],       idx);
+            memcpy(new_argv[j+1], argv[i]+idx+1, len-idx-1);
+
+            j += 2;
+        } else {
+            new_argv[j] = (char*)calloc(len + 1, 1);
+
+            memcpy(new_argv[j], argv[i], len);
+
+            j += 1;
+        }
+    }
+
+    // Update argc
+    *argc = new_argc;
+
+    return new_argv;
+}
+
 // Create new argparser
 argparser argparser_create(int argc, char* argv[], Parsemode mode) {
     size_t init_cap = 5;
+
+    // Reformat argv in case --arg=val notation is used
+    argv = remove_equals(&argc, argv);
 
     argparser ap;
     ap.argc = argc;
@@ -22,18 +72,23 @@ argparser argparser_create(int argc, char* argv[], Parsemode mode) {
 // Destroy argparser args
 void argparser_destroy(argparser* ap) {
     int i;
+
     for (i = 0; i < ap->size; i++) {
         free(ap->args[i].shortarg);
         free(ap->args[i].longarg);
     }
     free(ap->args);
+
+    for (i = 0; i < ap->argc; i++)
+        free(ap->argv[i]);
+    free(ap->argv);
 }
 
 // Add arg to argparser
 void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Argtype type, void* arg, void (*callback)()) {
     argstruct as;
-    as.shortarg = malloc(strlen(shortarg) + 1);
-    as.longarg  = malloc(strlen(longarg) + 1);
+    as.shortarg = (char*)malloc(strlen(shortarg) + 1);
+    as.longarg  = (char*)malloc(strlen(longarg) + 1);
     as.type     = type;
     as.arg      = arg;
     as.callback = callback;
