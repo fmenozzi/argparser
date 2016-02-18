@@ -144,7 +144,7 @@ void argparser_parse(argparser* ap) {
                             as->parsed = 1;
                         }
                         break;
-                    case ARGTYPE_VOID:
+                    case ARGTYPE_BOOL:
                         *(int*)as->arg += 1;
                         as->parsed = 1;
                     default:

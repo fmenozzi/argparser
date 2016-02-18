@@ -12,6 +12,7 @@ typedef enum {
     ARGTYPE_INT,
     ARGTYPE_DOUBLE,
     ARGTYPE_STRING,
+    ARGTYPE_BOOL,
 } Argtype;
 
 typedef enum {
