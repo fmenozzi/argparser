@@ -19,7 +19,7 @@ static char** remove_equals(int* argc, char* argv[]) {
     int old_argc = *argc;
     int new_argc = old_argc;
     int i, j;
-    for (i = 1; i < old_argc; i++)
+    for (i = 0; i < old_argc; i++)
         if (indexof(argv[i], '=') != -1)
             new_argc++;
 
@@ -115,7 +115,7 @@ void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Arg
 // Parse arguments
 void argparser_parse(argparser* ap) {
     int i, j;
-    for (i = 1; i < ap->argc; i++) {
+    for (i = 0; i < ap->argc; i++) {
         for (j = 0; j < ap->size; j++) {
             argstruct* as = &ap->args[j];
 
@@ -174,7 +174,7 @@ void argparser_parse(argparser* ap) {
     }
 
     // Call callbacks, if applicable
-    for (i = 1; i < ap->size; i++)
+    for (i = 0; i < ap->size; i++)
         if (ap->args[i].callback && ap->args[i].parsed)
             ap->args[i].callback();
 
