@@ -1,4 +1,4 @@
-Simple command line parser for C/C++ programs. Use `make example` to run example code.
+Simple command line parser for C/C++ programs. Use `make test` to run test code.
 
 The API is quite simple, with only three functions: `argparser_create`, `argparser_add`, and `argparser_parse`.
 
@@ -16,11 +16,11 @@ Adds an argument to the parser. There are six parameters to this function:
 + A pointer containing the address of the variable you wish to populate. `NULL` can safely be passed if you're using `ARGTYPE_VOID`
 + A callback function pointer. `NULL` can safely be passed if you don't need a callback.
 
-For example, the following line of code
+For test, the following line of code
 
     argparser_add(&ap, "-h", "--help", ARGTYPE_VOID, NULL, help_callback);
     
-will register the arguments `-h` and `--help` and call the function `help_callback` once `argparse_parse` is called. Check out `example.c` for more.
+will register the arguments `-h` and `--help` and call the function `help_callback` once `argparse_parse` is called. Check out `test.c` for more.
 
 ### argparser_parse
 Begins parsing the command line args, populating values and calling callbacks. All resources will be cleanup up at the end of this function call.
