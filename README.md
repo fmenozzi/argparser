@@ -20,7 +20,7 @@ For test, the following line of code
 
     argparser_add(&ap, "-h", "--help", ARGTYPE_VOID, NULL, help_callback);
     
-will register the arguments `-h` and `--help` and call the function `help_callback` once `argparse_parse` is called. Check out `test.c` for more.
+will register the arguments `-h` and `--help` and call the function `help_callback` once `argparser_parse` is called. Check out `test.c` for more.
 
 ### argparser_parse
 Begins parsing the command line args, populating values and calling callbacks. All resources will be cleaned up at the end of this function call.
