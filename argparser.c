@@ -7,7 +7,7 @@
 // Find index of a char in a string
 static int indexof(char* str, char c) {
     int i;
-    for (i = 0; i < strlen(str); i++)
+    for (i = 0; i < (int)strlen(str); i++)
         if (str[i] == c)
             return i;
     return -1;
@@ -73,7 +73,7 @@ argparser argparser_create(int argc, char* argv[], Parsemode mode) {
 static void argparser_destroy(argparser* ap) {
     int i;
 
-    for (i = 0; i < ap->size; i++) {
+    for (i = 0; i < (int)ap->size; i++) {
         free(ap->args[i].shortarg);
         free(ap->args[i].longarg);
     }
@@ -116,7 +116,7 @@ void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Arg
 void argparser_parse(argparser* ap) {
     int i, j;
     for (i = 0; i < ap->argc; i++) {
-        for (j = 0; j < ap->size; j++) {
+        for (j = 0; j < (int)ap->size; j++) {
             argstruct* as = &ap->args[j];
 
             int shortmatch = strcmp(ap->argv[i], as->shortarg) == 0;
@@ -160,7 +160,7 @@ void argparser_parse(argparser* ap) {
     // If strict, make sure all args were passed
     if (ap->mode== PARSEMODE_STRICT) {
         int failed = 0;
-        for (i = 0; i < ap->size; i++) {
+        for (i = 0; i < (int)ap->size; i++) {
             argstruct as = ap->args[i];
             if (!as.parsed) {
                 fprintf(stderr, "Failed to provide arg %s, %s\n", as.shortarg, as.longarg);
@@ -174,7 +174,7 @@ void argparser_parse(argparser* ap) {
     }
 
     // Call callbacks, if applicable
-    for (i = 0; i < ap->size; i++)
+    for (i = 0; i < (int)ap->size; i++)
         if (ap->args[i].callback && ap->args[i].parsed)
             ap->args[i].callback();
 

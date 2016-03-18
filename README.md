@@ -1,4 +1,4 @@
-Simple command line parser for C/C++ programs. Use `make` to run test code.
+Simple command line parser for C/C++ programs. Use `make` to run test code with `gcc`. Check out the Makefile for more.
 
 The API is quite simple, with only three functions: `argparser_create`, `argparser_add`, and `argparser_parse`.
 
