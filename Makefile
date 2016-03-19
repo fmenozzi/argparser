@@ -16,19 +16,19 @@ test-all: test-gcc test-gpp test-clang test-clangpp
 
 test-gcc:
 	@echo "Testing with gcc..."
-	@$(GCC_DEBUG) test.c argparser.c -o test && ./test -p -h -v -i=2 -d=2.2 -s="Hello"
+	@$(GCC_DEBUG) test.c argparser.c -o test && ./test -p --help -v -i 2 --double=2.2 -s="Hello"
 
 test-gpp:
 	@echo "Testing with g++..."
-	@$(GPP_DEBUG) test.c argparser.c -o test && ./test -p -h -v -i=2 -d=2.2 -s="Hello"
+	@$(GPP_DEBUG) test.c argparser.c -o test && ./test -p --help -v -i 2 --double=2.2 -s="Hello"
 
 test-clang:
 	@echo "Testing with clang..."
-	@$(CLANG_DEBUG) test.c argparser.c -o test && ./test -p -h -v -i=2 -d=2.2 -s="Hello"
+	@$(CLANG_DEBUG) test.c argparser.c -o test && ./test -p --help -v -i 2 --double=2.2 -s="Hello"
 
 test-clangpp:
 	@echo "Testing with clang++..."
-	@$(CLANGPP_DEBUG) test.c argparser.c -o test && ./test -p -h -v -i=2 -d=2.2 -s="Hello"
+	@$(CLANGPP_DEBUG) test.c argparser.c -o test && ./test -p --help -v -i 2 --double=2.2 -s="Hello"
 
 clean:
 	@rm -rf test
