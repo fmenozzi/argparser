@@ -71,17 +71,19 @@ argparser argparser_create(int argc, char* argv[], Parsemode mode) {
 
 // Destroy argparser args
 static void argparser_destroy(argparser* ap) {
-    int i;
+    if (ap) {
+        int i;
 
-    for (i = 0; i < (int)ap->size; i++) {
-        free(ap->args[i].shortarg);
-        free(ap->args[i].longarg);
+        for (i = 0; i < (int)ap->size; i++) {
+            free(ap->args[i].shortarg);
+            free(ap->args[i].longarg);
+        }
+        free(ap->args);
+
+        for (i = 0; i < ap->argc; i++)
+            free(ap->argv[i]);
+        free(ap->argv);
     }
-    free(ap->args);
-
-    for (i = 0; i < ap->argc; i++)
-        free(ap->argv[i]);
-    free(ap->argv);
 }
 
 // Add arg to argparser
@@ -96,6 +98,12 @@ void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Arg
 
     strcpy(as.shortarg, shortarg);
     strcpy(as.longarg, longarg);
+
+    if (!ap) {
+        fprintf(stderr, "Passed NULL pointer to argparser_add\n");
+        fprintf(stderr, "Aborting\n");
+        exit(EXIT_FAILURE);
+    }
 
     if (ap->size < ap->cap) {
         ap->args[ap->size++] = as;
@@ -169,7 +177,8 @@ void argparser_parse(argparser* ap) {
         }
         if (failed) {
             argparser_destroy(ap);
-            exit(-1);
+            fprintf(stderr, "Aborting\n");
+            exit(EXIT_FAILURE);
         }
     }
 
