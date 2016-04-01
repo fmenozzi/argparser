@@ -46,18 +46,18 @@ int main(int argc, char* argv[]) {
 
     argparser_parse(&ap);
 
-    // Args
+    /* Args */
     assert(i != 0,                 "i was not modified");
     assert(d != 0.0,               "d was not modified");
     assert(strcmp(s, "Zero") != 0, "s was not modified");
     assert(p == 1,                 "p was not modified");
 
-    // Callbacks
+    /* Callbacks */
     assert(help_func_called,    "help_func() was not called");
     assert(verbose_func_called, "verbose_func() was not called");
     assert(string_func_called,  "string_func() was not called");
 
-    // Print arg values
+    /* Print arg values */
     fprintf(stdout, "i: %d\n", i);
     fprintf(stdout, "d: %f\n", d);
     fprintf(stdout, "s: %s\n", s);

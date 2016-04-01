@@ -4,7 +4,9 @@
 #include <string.h>
 #include <stdio.h>
 
-// Find index of a char in a string
+/*
+ * Find index of a char in a string
+ */
 static int indexof(char* str, char c) {
     int i;
     for (i = 0; i < (int)strlen(str); i++)
@@ -13,18 +15,23 @@ static int indexof(char* str, char c) {
     return -1;
 }
 
-// Reformat argv to allow for --arg=val
+/*
+ * Reformat argv to allow for --arg=val
+ */
 static char** remove_equals(int* argc, char* argv[]) {
-    // Find new argc
-    int old_argc = *argc;
-    int new_argc = old_argc;
+    int old_argc, new_argc;
+    char** new_argv;
     int i, j;
+
+    /* Find new argc */
+    old_argc = *argc;
+    new_argc = old_argc;
     for (i = 0; i < old_argc; i++)
         if (indexof(argv[i], '=') != -1)
             new_argc++;
 
-    // Allocate new argv
-    char** new_argv = (char**)malloc(new_argc * sizeof(char*));
+    /* Allocate new argv */
+    new_argv = (char**)malloc(new_argc * sizeof(char*));
     for (i = 0, j = 0; i < old_argc; i++) {
         int len = strlen(argv[i]);
         int idx = indexof(argv[i], '=');
@@ -45,20 +52,22 @@ static char** remove_equals(int* argc, char* argv[]) {
         }
     }
 
-    // Update argc
+    /* Update argc */
     *argc = new_argc;
 
     return new_argv;
 }
 
-// Create new argparser
+/*
+ * Create new argparser
+ */
 argparser argparser_create(int argc, char* argv[], Parsemode mode) {
     size_t init_cap = 5;
+    argparser ap;
 
-    // Reformat argv in case --arg=val notation is used
+    /* Reformat argv in case --arg=val notation is used */
     argv = remove_equals(&argc, argv);
 
-    argparser ap;
     ap.argc = argc;
     ap.argv = argv;
     ap.mode = mode;
@@ -69,7 +78,9 @@ argparser argparser_create(int argc, char* argv[], Parsemode mode) {
     return ap;
 }
 
-// Destroy argparser args
+/*
+ * Destroy argparser args
+ */
 static void argparser_destroy(argparser* ap) {
     if (ap) {
         int i;
@@ -86,7 +97,9 @@ static void argparser_destroy(argparser* ap) {
     }
 }
 
-// Add arg to argparser
+/*
+ * Add arg to argparser
+ */
 void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Argtype type, void* arg, void (*callback)()) {
     argstruct as;
     as.shortarg = (char*)malloc(strlen(shortarg) + 1);
@@ -120,7 +133,9 @@ void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Arg
     }
 }
 
-// Parse arguments
+/*
+ * Parse arguments
+ */
 void argparser_parse(argparser* ap) {
     int i, j;
     for (i = 0; i < ap->argc; i++) {
@@ -131,7 +146,7 @@ void argparser_parse(argparser* ap) {
             int longmatch  = strcmp(ap->argv[i], as->longarg) == 0;
 
             if (shortmatch || longmatch) {
-                // Assign arg, if applicable
+                /* Assign arg, if applicable */
                 if (as->arg) {
                     switch (as->type) {
                     case ARGTYPE_INT:
@@ -165,7 +180,7 @@ void argparser_parse(argparser* ap) {
         }
     }
 
-    // If strict, make sure all args were passed
+    /* If strict, make sure all args were passed */
     if (ap->mode == PARSEMODE_STRICT) {
         int failed = 0;
         for (i = 0; i < (int)ap->size; i++) {
@@ -182,11 +197,11 @@ void argparser_parse(argparser* ap) {
         }
     }
 
-    // Call callbacks, if applicable
+    /* Call callbacks, if applicable */
     for (i = 0; i < (int)ap->size; i++)
         if (ap->args[i].callback && ap->args[i].parsed)
             ap->args[i].callback();
 
-    // Cleanup
+    /* Cleanup */
     argparser_destroy(ap);
 }

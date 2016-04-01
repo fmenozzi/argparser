@@ -12,12 +12,12 @@ typedef enum {
     ARGTYPE_INT,
     ARGTYPE_DOUBLE,
     ARGTYPE_STRING,
-    ARGTYPE_BOOL,
+    ARGTYPE_BOOL
 } Argtype;
 
 typedef enum {
     PARSEMODE_STRICT,
-    PARSEMODE_LENIENT,
+    PARSEMODE_LENIENT
 } Parsemode;
 
 typedef struct {

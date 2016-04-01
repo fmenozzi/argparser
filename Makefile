@@ -1,7 +1,7 @@
-GCC = gcc -Wall
-GPP = g++ -Wall
-CLANG = clang -Wall
-CLANGPP = clang++ -Wall
+GCC = gcc -Wall -pedantic
+GPP = g++ -Wall -pedantic
+CLANG = clang -Wall -pedantic
+CLANGPP = clang++ -Wall -pedantic
 
 GCC_DEBUG = @$(GCC) -g
 GPP_DEBUG = @$(GPP) -g
