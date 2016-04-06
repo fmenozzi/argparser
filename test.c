@@ -38,8 +38,8 @@ int main(int argc, char* argv[]) {
     argparser ap = argparser_create(argc, argv, PARSEMODE_STRICT);
 
     argparser_add(&ap, "-h", "--help",    ARGTYPE_VOID,   NULL, help_func);
-    argparser_add(&ap, "-v", "--verbose", ARGTYPE_VOID,   NULL, verbose_func);
-    argparser_add(&ap, "-i", "--integer", ARGTYPE_INT,    &i,   NULL);
+    argparser_add(&ap, "-v", NULL,        ARGTYPE_VOID,   NULL, verbose_func);
+    argparser_add(&ap, NULL, "--integer", ARGTYPE_INT,    &i,   NULL);
     argparser_add(&ap, "-d", "--double",  ARGTYPE_DOUBLE, &d,   NULL);
     argparser_add(&ap, "-s", "--string",  ARGTYPE_STRING, &s,   string_func);
     argparser_add(&ap, "-p", "--present", ARGTYPE_BOOL,   &p,   NULL);

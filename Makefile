@@ -15,20 +15,20 @@ test: test-gcc
 test-all: test-gcc test-gpp test-clang test-clangpp
 
 test-gcc:
-	@echo "Testing with gcc..."
-	@$(GCC_DEBUG) test.c argparser.c -o test && ./test -p --help -v -i 2 --double=2.2 -s="Hello"
+	@echo "Testing valid input with gcc..."
+	@$(GCC_DEBUG) test.c argparser.c -o test && ./test -p --help -v --integer 2 --double=2.2 -s="Hello"
 
 test-gpp:
-	@echo "Testing with g++..."
-	@$(GPP_DEBUG) test.c argparser.c -o test && ./test -p --help -v -i 2 --double=2.2 -s="Hello"
+	@echo "Testing valid input with g++..."
+	@$(GPP_DEBUG) test.c argparser.c -o test && ./test -p --help -v --integer 2 --double=2.2 -s="Hello"
 
 test-clang:
-	@echo "Testing with clang..."
-	@$(CLANG_DEBUG) test.c argparser.c -o test && ./test -p --help -v -i 2 --double=2.2 -s="Hello"
+	@echo "Testing valid input with clang..."
+	@$(CLANG_DEBUG) test.c argparser.c -o test && ./test -p --help -v --integer 2 --double=2.2 -s="Hello"
 
 test-clangpp:
-	@echo "Testing with clang++..."
-	@$(CLANGPP_DEBUG) test.c argparser.c -o test && ./test -p --help -v -i 2 --double=2.2 -s="Hello"
+	@echo "Testing valid input with clang++..."
+	@$(CLANGPP_DEBUG) test.c argparser.c -o test && ./test -p --help -v --integer 2 --double=2.2 -s="Hello"
 
 clean:
 	@rm -rf test

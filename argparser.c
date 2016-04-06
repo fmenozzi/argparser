@@ -86,8 +86,10 @@ static void argparser_destroy(argparser* ap) {
         int i;
 
         for (i = 0; i < (int)ap->size; i++) {
-            free(ap->args[i].shortarg);
-            free(ap->args[i].longarg);
+            if (ap->args[i].shortarg)
+                free(ap->args[i].shortarg);
+            if (ap->args[i].longarg)
+                free(ap->args[i].longarg);
         }
         free(ap->args);
 
@@ -102,19 +104,33 @@ static void argparser_destroy(argparser* ap) {
  */
 void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Argtype type, void* arg, void (*callback)()) {
     argstruct as;
-    as.shortarg = (char*)malloc(strlen(shortarg) + 1);
-    as.longarg  = (char*)malloc(strlen(longarg) + 1);
+    as.shortarg = NULL;
+    as.longarg  = NULL;
     as.type     = type;
     as.arg      = arg;
     as.callback = callback;
     as.parsed   = 0;
-
-    strcpy(as.shortarg, shortarg);
-    strcpy(as.longarg, longarg);
-
+    
     if (!ap) {
         fprintf(stderr, "Passed NULL pointer to argparser_add\n");
         fprintf(stderr, "Aborting\n");
+        argparser_destroy(ap);
+        exit(EXIT_FAILURE);
+    }
+
+    if (shortarg || longarg) {
+        if (shortarg) {
+            as.shortarg = (char*)malloc(strlen(shortarg) + 1);
+            strcpy(as.shortarg, shortarg);
+        }
+        if (longarg) {
+            as.longarg  = (char*)malloc(strlen(longarg) + 1);
+            strcpy(as.longarg, longarg);
+        }
+    } else {
+        fprintf(stderr, "No valid arg string passed\n");
+        fprintf(stderr, "Aborting\n");
+        argparser_destroy(ap);
         exit(EXIT_FAILURE);
     }
 
@@ -142,8 +158,8 @@ void argparser_parse(argparser* ap) {
         for (j = 0; j < (int)ap->size; j++) {
             argstruct* as = &ap->args[j];
 
-            int shortmatch = strcmp(ap->argv[i], as->shortarg) == 0;
-            int longmatch  = strcmp(ap->argv[i], as->longarg) == 0;
+            int shortmatch = as->shortarg ? strcmp(ap->argv[i], as->shortarg) == 0 : 0;
+            int longmatch  = as->longarg  ? strcmp(ap->argv[i], as->longarg)  == 0 : 0;
 
             if (shortmatch || longmatch) {
                 /* Assign arg, if applicable */
@@ -186,7 +202,9 @@ void argparser_parse(argparser* ap) {
         for (i = 0; i < (int)ap->size; i++) {
             argstruct as = ap->args[i];
             if (!as.parsed) {
-                fprintf(stderr, "Failed to provide arg %s, %s\n", as.shortarg, as.longarg);
+                const char* shortarg = as.shortarg ? as.shortarg : "(NULL)";
+                const char* longarg  = as.longarg  ? as.longarg  : "(NULL)";
+                fprintf(stderr, "Failed to provide arg %s, %s\n", shortarg, longarg);
                 failed = 1;
             }
         }

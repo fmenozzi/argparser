@@ -16,7 +16,9 @@ Adds an argument to the parser. There are six parameters to this function:
 + A pointer containing the address of the variable you wish to populate. `NULL` can safely be passed if you're using `ARGTYPE_VOID`
 + A callback function pointer. `NULL` can safely be passed if you don't need a callback.
 
-For test, the following line of code
+At least one of `shortarg` and `longarg` must be valid (i.e. non-NULL) strings.
+
+For example, the following line of code
 
     argparser_add(&ap, "-h", "--help", ARGTYPE_VOID, NULL, help_callback);
     
