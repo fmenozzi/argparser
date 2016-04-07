@@ -205,9 +205,13 @@ void argparser_parse(argparser* ap) {
         for (i = 0; i < (int)ap->size; i++) {
             argstruct as = ap->args[i];
             if (!as.parsed) {
-                const char* shortarg = as.shortarg ? as.shortarg : "(NULL)";
-                const char* longarg  = as.longarg  ? as.longarg  : "(NULL)";
-                fprintf(stderr, "Failed to provide arg %s, %s\n", shortarg, longarg);
+                const char* sa = as.shortarg;
+                const char* la = as.longarg;
+                if (sa && la)
+                    fprintf(stderr, "Failed to provide arg %s, %s\n", sa, la);
+                else
+                    fprintf(stderr, "Failed to provide arg %s\n", sa ? sa : la);
+
                 failed = 1;
             }
         }
