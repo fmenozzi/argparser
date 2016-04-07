@@ -59,26 +59,6 @@ static char** remove_equals(int* argc, char* argv[]) {
 }
 
 /*
- * Create new argparser
- */
-argparser argparser_create(int argc, char* argv[], Parsemode mode) {
-    size_t init_cap = 5;
-    argparser ap;
-
-    /* Reformat argv in case --arg=val notation is used */
-    argv = remove_equals(&argc, argv);
-
-    ap.argc = argc;
-    ap.argv = argv;
-    ap.mode = mode;
-    ap.args = (argstruct*)calloc(init_cap, sizeof(argstruct));
-    ap.size = 0;
-    ap.cap  = init_cap;
-
-    return ap;
-}
-
-/*
  * Destroy argparser args
  */
 static void argparser_destroy(argparser* ap) {
@@ -100,6 +80,36 @@ static void argparser_destroy(argparser* ap) {
 }
 
 /*
+ * Cleanup resources and abort program
+ */
+static void argparser_abort(argparser* ap, const char* msg) {
+    fprintf(stderr, "%s\n", msg);
+    fprintf(stderr, "Aborting\n");
+    argparser_destroy(ap);
+    exit(EXIT_FAILURE);
+}
+
+/*
+ * Create new argparser
+ */
+argparser argparser_create(int argc, char* argv[], Parsemode mode) {
+    size_t init_cap = 5;
+    argparser ap;
+
+    /* Reformat argv in case --arg=val notation is used */
+    argv = remove_equals(&argc, argv);
+
+    ap.argc = argc;
+    ap.argv = argv;
+    ap.mode = mode;
+    ap.args = (argstruct*)calloc(init_cap, sizeof(argstruct));
+    ap.size = 0;
+    ap.cap  = init_cap;
+
+    return ap;
+}
+
+/*
  * Add arg to argparser
  */
 void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Argtype type, void* arg, void (*callback)()) {
@@ -111,12 +121,8 @@ void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Arg
     as.callback = callback;
     as.parsed   = 0;
     
-    if (!ap) {
-        fprintf(stderr, "Passed NULL pointer to argparser_add\n");
-        fprintf(stderr, "Aborting\n");
-        argparser_destroy(ap);
-        exit(EXIT_FAILURE);
-    }
+    if (!ap)
+        argparser_abort(ap, "Passed NULL pointer to argparser_add");
 
     if (shortarg || longarg) {
         if (shortarg) {
@@ -128,10 +134,7 @@ void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Arg
             strcpy(as.longarg, longarg);
         }
     } else {
-        fprintf(stderr, "No valid arg string passed\n");
-        fprintf(stderr, "Aborting\n");
-        argparser_destroy(ap);
-        exit(EXIT_FAILURE);
+        argparser_abort(ap, "No valid arg string passed");
     }
 
     if (ap->size < ap->cap) {
@@ -209,9 +212,7 @@ void argparser_parse(argparser* ap) {
             }
         }
         if (failed) {
-            argparser_destroy(ap);
-            fprintf(stderr, "Aborting\n");
-            exit(EXIT_FAILURE);
+            argparser_abort(ap, "Failed to provide mandatory argument(s)");
         }
     }
 
