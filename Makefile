@@ -8,9 +8,7 @@ GPP_DEBUG = @$(GPP) -g
 CLANG_DEBUG = @$(CLANG) -g
 CLANGPP_DEBUG = @$(CLANGPP) -g
 
-all: clean test
-
-test: test-gcc
+all: clean test-gcc
 
 test-all: test-gcc test-gpp test-clang test-clangpp
 
