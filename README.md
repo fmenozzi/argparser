@@ -16,7 +16,7 @@ Adds an argument to the parser. There are six parameters to this function:
 + A pointer containing the address of the variable you wish to populate. `NULL` can safely be passed if you're using `ARGTYPE_VOID`
 + A callback function pointer. `NULL` can safely be passed if you don't need a callback.
 
-At least one of `shortarg` and `longarg` must be valid (i.e. non-NULL) strings.
+At least one of `shortarg` and `longarg` must be non-NULL strings, and neither can be the empty string.
 
 For example, the following line of code
 

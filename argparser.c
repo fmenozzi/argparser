@@ -144,21 +144,26 @@ void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Arg
     as.arg      = arg;
     as.callback = callback;
     as.parsed   = 0;
-    
+   
+    /* No null ap */
     if (!ap)
         argparser_abort(ap, "Passed NULL pointer to argparser_add");
 
-    if (shortarg || longarg) {
-        if (shortarg) {
-            as.shortarg = (char*)malloc(strlen(shortarg) + 1);
-            strcpy(as.shortarg, shortarg);
-        }
-        if (longarg) {
-            as.longarg  = (char*)malloc(strlen(longarg) + 1);
-            strcpy(as.longarg, longarg);
-        }
-    } else {
-        argparser_abort(ap, "No valid arg string passed");
+    /* No null or empty argstrings */
+    if (!shortarg && !longarg)
+        argparser_abort(ap, "Passed NULL pointers to both argstrings");
+    if (shortarg && strcmp(shortarg, "") == 0)
+        argparser_abort(ap, "Passed empty string to shortarg");
+    if (longarg && strcmp(longarg, "") == 0)
+        argparser_abort(ap, "Passed empty string to longarg");
+
+    if (shortarg) {
+        as.shortarg = (char*)malloc(strlen(shortarg) + 1);
+        strcpy(as.shortarg, shortarg);
+    }
+    if (longarg) {
+        as.longarg  = (char*)malloc(strlen(longarg) + 1);
+        strcpy(as.longarg, longarg);
     }
 
     if (ap->size < ap->cap) {
