@@ -50,7 +50,8 @@ void string_func()  { string_func_called = 1; }
  *      ./test --double=3
  *
  * If you just want to check whether a flag is present (e.g. ./test -p),
- * use the ARGTYPE_BOOL option
+ * use the ARGTYPE_BOOL option. These flags can be combined during
+ * program execution (e.g. "./test -hv" is equivalent to "./test -h -v")
  */
 
 int main(int argc, char* argv[]) {
@@ -58,6 +59,7 @@ int main(int argc, char* argv[]) {
     double d = 0.0;
     char s[50] = "Zero";
     int p = 0;
+    int f = 0;
 
     argparser ap = argparser_create(argc, argv, PARSEMODE_STRICT);
 
@@ -67,6 +69,7 @@ int main(int argc, char* argv[]) {
     argparser_add(&ap, "-d", "--double",  ARGTYPE_DOUBLE, &d,   NULL);
     argparser_add(&ap, "-s", "--string",  ARGTYPE_STRING, &s,   string_func);
     argparser_add(&ap, "-p", "--present", ARGTYPE_BOOL,   &p,   NULL);
+    argparser_add(&ap, "-f", "--flag",    ARGTYPE_BOOL,   &f,   NULL);
 
     argparser_parse(&ap);
 
@@ -75,6 +78,7 @@ int main(int argc, char* argv[]) {
     assert(d != 0.0,               "d was not modified");
     assert(strcmp(s, "Zero") != 0, "s was not modified");
     assert(p == 1,                 "p was not modified");
+    assert(f == 1,                 "f was not modified");
 
     /* Callbacks */
     assert(help_func_called,    "help_func() was not called");
@@ -86,6 +90,7 @@ int main(int argc, char* argv[]) {
     fprintf(stdout, "d: %f\n", d);
     fprintf(stdout, "s: %s\n", s);
     fprintf(stdout, "p: %d\n", p);
+    fprintf(stdout, "f: %d\n", f);
 
     return 0;
 }

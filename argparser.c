@@ -82,6 +82,54 @@ static char** remove_equals(int* argc, char* argv[]) {
     return new_argv;
 }
 
+
+/*
+ * Determine if arg is of form -abc
+ */
+static int is_multi_shortarg(char* str) {
+    return str[0] == '-' && str[1] != '-' && strlen(str) > 2;
+}
+
+/*
+ * Reformat argv to allow for ./test -abc equivalent of ./test -a -b -c
+ */
+static char** expand_shortargs(int* argc, char* argv[]) {
+    int old_argc, new_argc;
+    char** new_argv;
+    int i, j;
+
+    /* Find new argc */
+    old_argc = *argc;
+    new_argc = old_argc;
+    for (i = 0; i < old_argc; i++)
+        if (is_multi_shortarg(argv[i]))
+            new_argc += strlen(argv[i]) - 2;
+
+    /* Allocate new argv */
+    new_argv = (char**)malloc(new_argc * sizeof(char*));
+    for (i = 0, j = 0; i < old_argc; i++) {
+        int len = strlen(argv[i]);
+        if (is_multi_shortarg(argv[i])) {
+            int k;
+            for (k = 0; k < len-1; k++) {
+                new_argv[j+k] = (char*)calloc(3, 1);
+                memcpy(new_argv[j+k],   "-",         1);
+                memcpy(new_argv[j+k]+1, argv[i]+k+1, 1);
+            }
+            j += len-1;
+        } else {
+            new_argv[j] = (char*)calloc(len + 1, 1);
+            memcpy(new_argv[j], argv[i], len);
+            j += 1;
+        }
+    }
+
+    /* Update argc */
+    *argc = new_argc;
+
+    return new_argv;
+}
+
 /*
  * Destroy argparser args
  */
@@ -122,6 +170,9 @@ argparser argparser_create(int argc, char* argv[], Parsemode mode) {
 
     /* Reformat argv in case --arg=val notation is used */
     argv = remove_equals(&argc, argv);
+
+    /* Expand shortargs in case -ab notation is used */
+    argv = expand_shortargs(&argc, argv);
 
     ap.argc = argc;
     ap.argv = argv;
