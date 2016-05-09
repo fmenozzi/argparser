@@ -8,25 +8,26 @@ GPP_DEBUG = @$(GPP) -g
 CLANG_DEBUG = @$(CLANG) -g
 CLANGPP_DEBUG = @$(CLANGPP) -g
 
+CMD = test.c argparser.c -o test && ./test -pf --help -v --integer 2 --double=2.2 -s="Hello"
+
 all: clean test-gcc
 
 test-all: test-gcc test-gpp test-clang test-clangpp
 
 test-gcc:
 	@echo "Testing valid input with gcc..."
-	@$(GCC_DEBUG) test.c argparser.c -o test && ./test -pf --help -v --integer 2 --double=2.2 -s="Hello"
-
+	@$(GCC_DEBUG) $(CMD)
 test-gpp:
 	@echo "Testing valid input with g++..."
-	@$(GPP_DEBUG) test.c argparser.c -o test && ./test -pf --help -v --integer 2 --double=2.2 -s="Hello"
+	@$(GPP_DEBUG) $(CMD)
 
 test-clang:
 	@echo "Testing valid input with clang..."
-	@$(CLANG_DEBUG) test.c argparser.c -o test && ./test -pf --help -v --integer 2 --double=2.2 -s="Hello"
+	@$(CLANG_DEBUG) $(CMD)
 
 test-clangpp:
 	@echo "Testing valid input with clang++..."
-	@$(CLANGPP_DEBUG) test.c argparser.c -o test && ./test -pf --help -v --integer 2 --double=2.2 -s="Hello"
+	@$(CLANGPP_DEBUG) $(CMD)
 
 clean:
 	@rm -rf test
