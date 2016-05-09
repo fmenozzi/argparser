@@ -169,6 +169,11 @@ void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Arg
     if (longarg && strcmp(longarg, "") == 0)
         argparser_abort(ap, "Passed empty string to longarg");
 
+    /* Shortarg must be a single character (excluding dash) */
+    if (shortarg && strlen(shortarg) != 2)
+        argparser_abort(ap, "Shortarg must be a single character (excluding dash)");
+
+    /* Copy argstrings */
     if (shortarg) {
         as.shortarg = (char*)malloc(strlen(shortarg) + 1);
         strcpy(as.shortarg, shortarg);
@@ -178,6 +183,7 @@ void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Arg
         strcpy(as.longarg, longarg);
     }
 
+    /* Add argstruct to dynamic array */
     if (ap->size < ap->cap) {
         ap->args[ap->size++] = as;
     } else {
