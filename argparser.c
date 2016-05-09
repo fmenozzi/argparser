@@ -40,6 +40,18 @@ static int indexof(char* str, char c) {
 }
 
 /*
+ * Strip dashes from arg string
+ */
+static char* without_dashes(char* str) {
+    if (str[0] == '-') {
+        if (str[1] == '-')
+            return str + 2;
+        return str + 1;
+    }
+    return str;
+}
+
+/*
  * Reformat argv to allow for --arg=val
  */
 static char** remove_equals(int* argc, char* argv[]) {
