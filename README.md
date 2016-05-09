@@ -10,10 +10,10 @@ Takes system arguments (i.e. `argc` and `argv`) and a parse mode and returns an 
 ### argparser_add
 Adds an argument to the parser. There are six parameters to this function:
 + A pointer to an `argparser` object
-+ The shortarg string (e.g. `-h`)
-    + Must be a single dash followed by a single character
-+ The longarg string (e.g. `--help`)
-    + Must be two dashes followed by any number of additional characters
++ The shortarg string
+    + Must be a single dash followed by a single character (e.g. `-h`)
++ The longarg string
+    + Must be two dashes followed by any number of additional characters (e.g. `--help`)
 + An enum describing the type of argument. One of `ARGTYPE_INT`, `ARGTYPE_DOUBLE`, `ARGTYPE_STRING`, `ARGTYPE_BOOL`, or `ARGTYPE_VOID`
 + A pointer containing the address of the variable you wish to populate. `NULL` can safely be passed if you're using `ARGTYPE_VOID`
 + A callback function pointer. `NULL` can safely be passed if you don't need a callback.
