@@ -44,10 +44,10 @@ void string_func()  { string_func_called = 1; }
  * For arguments that take values (such as -d, --double), you can
  * use any of the following formats:
  *
- *      ./example -d 3
- *      ./example -d=3
- *      ./example --double 3
- *      ./example --double=3
+ *      ./test -d 3
+ *      ./test -d=3
+ *      ./test --double 3
+ *      ./test --double=3
  *
  * If you just want to check whether a flag is present (e.g. ./test -p),
  * use the ARGTYPE_BOOL option
