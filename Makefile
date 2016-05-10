@@ -10,9 +10,9 @@ CLANGPP_DEBUG = @$(CLANGPP) -g
 
 CMD = test.c argparser.c -o test && ./test -pf --help -v --integer 2 --double=2.2 -s="Hello"
 
-all: clean test-gcc
+all: test-gcc clean
 
-test-all: test-gcc test-gpp test-clang test-clangpp
+test-all: test-gcc test-gpp test-clang test-clangpp clean
 
 test-gcc:
 	@echo "Testing valid input with gcc..."
