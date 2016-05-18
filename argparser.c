@@ -209,11 +209,11 @@ void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Arg
         argparser_abort(ap, "Passed empty string to longarg");
 
     /* Shortarg must be a dash followed by a single character */
-    if (shortarg && strlen(shortarg) != 2)
+    if (shortarg && (strlen(shortarg) != 2 || shortarg[0] != '-' || shortarg[1] == '-'))
         argparser_abort(ap, "Shortarg must be a single dash followed by a single character");
 
     /* Longarg must be two dashes followed by any number of additional characters */
-    if (longarg && (longarg[0] !=  '-' || longarg[1] != '-'))
+    if (longarg && (strlen(longarg) <= 2 || longarg[0] !=  '-' || longarg[1] != '-'))
         argparser_abort(ap, "Longarg must be two dashes followed by any number of additional characters");
 
     /* Copy argstrings */
