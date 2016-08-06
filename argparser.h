@@ -48,6 +48,7 @@ typedef struct {
     char* longarg;
     Argtype type;
     void* arg;
+    char* helpstr;
     int parsed;
 } argstruct;
 
@@ -61,7 +62,7 @@ typedef struct {
 } argparser;
 
 argparser argparser_create(int argc, char* argv[], Parsemode mode);
-void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Argtype type, void* arg);
+void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Argtype type, void* arg, const char* helpstr);
 void argparser_parse(argparser* ap);
 
 #ifdef __cplusplus

@@ -43,11 +43,10 @@ void assert(int pred, const char* msg) {
  *
  * If you just want to check whether a flag is present (e.g. ./test -p),
  * use the ARGTYPE_BOOL option. These flags can be combined during
- * program execution (e.g. "./test -hv" is equivalent to "./test -h -v")
+ * program execution (e.g. "./test -vp" is equivalent to "./test -v -p")
  */
 
 int main(int argc, char* argv[]) {
-    int h = 0;
     int v = 0;
     int i = 0;
     double d = 0.0;
@@ -57,7 +56,6 @@ int main(int argc, char* argv[]) {
 
     argparser ap = argparser_create(argc, argv, PARSEMODE_STRICT);
 
-    argparser_add(&ap, "-h", "--help",    ARGTYPE_BOOL,   &h);
     argparser_add(&ap, "-v", NULL,        ARGTYPE_BOOL,   &v);
     argparser_add(&ap, NULL, "--integer", ARGTYPE_INT,    &i);
     argparser_add(&ap, "-d", "--double",  ARGTYPE_DOUBLE, &d);
@@ -68,7 +66,6 @@ int main(int argc, char* argv[]) {
     argparser_parse(&ap);
 
     /* Args */
-    assert(h != 0,                 "h was not modified");
     assert(v != 0,                 "v was not modified");
     assert(i != 0,                 "i was not modified");
     assert(d != 0.0,               "d was not modified");
@@ -77,7 +74,6 @@ int main(int argc, char* argv[]) {
     assert(f == 1,                 "f was not modified");
 
     /* Print arg values */
-    fprintf(stdout, "h: %d\n", h);
     fprintf(stdout, "v: %d\n", v);
     fprintf(stdout, "i: %d\n", i);
     fprintf(stdout, "d: %f\n", d);

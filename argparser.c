@@ -124,10 +124,80 @@ static char** expand_shortargs(int* argc, char* argv[]) {
         }
     }
 
+    /* Since argv here is dynamically-allocated, free it */
+    for (i = 0; i < *argc; i++)
+        free(argv[i]);
+    free(argv);
+
     /* Update argc */
     *argc = new_argc;
 
     return new_argv;
+}
+
+/*
+ * Print help string with argparser's current args
+ */
+static void print_help_string(argparser* ap) {
+    int i, j;
+    int max_len = strlen("-h, --help");
+    int rightpad = 4;
+
+    const char* leftpadstr = "    ";
+
+    const char* lbrak = ap->mode == PARSEMODE_LENIENT ? "[" : "";
+    const char* rbrak = ap->mode == PARSEMODE_LENIENT ? "]" : "";
+
+    fprintf(stdout, "Usage: %s [-h,--help] ", ap->argv[0]);
+    for (i = 0; i < (int)ap->size; i++) {
+        argstruct* as = &ap->args[i];
+        if (as->shortarg) {
+            if (as->longarg)
+                fprintf(stdout, "%s%s,%s%s ", lbrak, as->shortarg, as->longarg, rbrak);
+            else
+                fprintf(stdout, "%s%s%s ", lbrak, as->shortarg, rbrak);
+        } else {
+            fprintf(stdout, "%s%s%s ", lbrak, as->longarg, rbrak);
+        }
+    }
+    fprintf(stdout, "\n\n");
+
+    for (i = 0; i < (int)ap->size; i++) {
+        argstruct* as = &ap->args[i];
+
+        int shortlen = as->shortarg ? strlen(as->shortarg) : 0;
+        int longlen  = as->longarg  ? strlen(as->longarg)  : 0;
+
+        int arg_len = (shortlen && longlen) ? (shortlen + 2 + longlen) : (shortlen + longlen);
+        if (arg_len > max_len)
+            max_len = arg_len;
+    }
+
+    fprintf(stdout, "Arguments:\n");
+    fprintf(stdout, "%s-h, --help", leftpadstr);
+    for (i = 0; i < max_len + rightpad - strlen("-h, --help"); i++)
+        fprintf(stdout, " ");
+    fprintf(stdout, "Show this help message and exit\n");
+    for (i = 0; i < (int)ap->size; i++) {
+        argstruct* as = &ap->args[i];
+
+        if (as->shortarg) {
+            if (as->longarg)
+                fprintf(stdout, "%s%s, %s", leftpadstr, as->shortarg, as->longarg);
+            else
+                fprintf(stdout, "%s%s", leftpadstr, as->shortarg);
+        } else {
+            fprintf(stdout, "%s%s", leftpadstr, as->longarg);
+        }
+
+        int shortlen = as->shortarg ? strlen(as->shortarg) : 0;
+        int longlen  = as->longarg  ? strlen(as->longarg)  : 0;
+        int arg_len = (shortlen && longlen) ? (shortlen + 2 + longlen) : (shortlen + longlen);
+        for (j = 0; j < max_len + rightpad - arg_len; j++)
+            fprintf(stdout, " ");
+
+        fprintf(stdout, "%s\n", as->helpstr);
+    }
 }
 
 /*
@@ -142,6 +212,8 @@ static void argparser_destroy(argparser* ap) {
                 free(ap->args[i].shortarg);
             if (ap->args[i].longarg)
                 free(ap->args[i].longarg);
+            if (ap->args[i].helpstr)
+                free(ap->args[i].helpstr);
         }
         free(ap->args);
 
@@ -187,12 +259,13 @@ argparser argparser_create(int argc, char* argv[], Parsemode mode) {
 /*
  * Add arg to argparser
  */
-void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Argtype type, void* arg) {
+void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Argtype type, void* arg, const char* helpstr) {
     argstruct as;
     as.shortarg = NULL;
     as.longarg  = NULL;
     as.type     = type;
     as.arg      = arg;
+    as.helpstr  = NULL;
     as.parsed   = 0;
    
     /* No null ap */
@@ -215,9 +288,19 @@ void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Arg
     if (longarg && (strlen(longarg) <= 2 || longarg[0] !=  '-' || longarg[1] != '-'))
         argparser_abort(ap, "Longarg must be two dashes followed by any number of additional characters");
 
+    /* -h, --help are reserved */
+    if (shortarg && strcmp(shortarg, "-h") == 0)
+        argparser_abort(ap, "-h is reserved short arg");
+    if (longarg && strcmp(longarg, "--help") == 0)
+        argparser_abort(ap, "--help is reserved long arg");
+
     /* No null arg */
     if (!arg)
         argparser_abort(ap, "Passed NULL arg pointer to argparser_add");
+
+    /* No null help string */
+    if (!helpstr)
+        argparser_abort(ap, "Passed NULL help string to argparser_add");
 
     /* Copy argstrings */
     if (shortarg) {
@@ -227,6 +310,12 @@ void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Arg
     if (longarg) {
         as.longarg  = (char*)malloc(strlen(longarg) + 1);
         strcpy(as.longarg, longarg);
+    }
+
+    /* Copy help string */
+    if (helpstr) {
+        as.helpstr = (char*)malloc(strlen(helpstr) + 1);
+        strcpy(as.helpstr, helpstr);
     }
 
     /* Add argstruct to dynamic array */
@@ -250,6 +339,9 @@ void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Arg
  */
 void argparser_parse(argparser* ap) {
     int i, j;
+
+    int help_passed = 0;
+
     for (i = 0; i < ap->argc; i++) {
         for (j = 0; j < (int)ap->size; j++) {
             argstruct* as = &ap->args[j];
@@ -286,8 +378,29 @@ void argparser_parse(argparser* ap) {
         }
     }
 
+    /* Check if no args were passed, or if -h, --help was passed as only arg */
+    if (ap->argc == 1) {
+        print_help_string(ap);
+        help_passed = 1;
+    } else if (ap->argc == 2) {
+        char* arg = ap->argv[1];
+
+        int shorthelp = strcmp(arg, "-h") == 0;
+        int longhelp  = strcmp(arg, "--help") == 0;
+
+        if (shorthelp || longhelp)
+            print_help_string(ap);
+
+        help_passed = 1;
+    }
+
+    if (help_passed) {
+        argparser_destroy(ap);
+        exit(EXIT_SUCCESS);
+    }
+
     /* If strict, make sure all args were passed */
-    if (ap->mode == PARSEMODE_STRICT) {
+    if (!help_passed && ap->mode == PARSEMODE_STRICT) {
         int failed = 0;
         for (i = 0; i < (int)ap->size; i++) {
             argstruct as = ap->args[i];
