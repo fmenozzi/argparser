@@ -8,7 +8,7 @@ Takes system arguments (i.e. `argc` and `argv`) and a parse mode and returns an 
     argparser ap = argparser_create(argc, argv, PARSEMODE_LENIENT);
     
 ### argparser_add
-Adds an argument to the parser. There are six parameters to this function:
+Adds an argument to the parser. There are five parameters to this function:
 + A pointer to an `argparser` object
 + The shortarg string
     + Must be a single dash followed by a single character (e.g. `-h`)
