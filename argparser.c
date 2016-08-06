@@ -187,18 +187,17 @@ argparser argparser_create(int argc, char* argv[], Parsemode mode) {
 /*
  * Add arg to argparser
  */
-void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Argtype type, void* arg, void (*callback)()) {
+void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Argtype type, void* arg) {
     argstruct as;
     as.shortarg = NULL;
     as.longarg  = NULL;
     as.type     = type;
     as.arg      = arg;
-    as.callback = callback;
     as.parsed   = 0;
    
     /* No null ap */
     if (!ap)
-        argparser_abort(ap, "Passed NULL pointer to argparser_add");
+        argparser_abort(ap, "Passed NULL argparser pointer to argparser_add");
 
     /* No null or empty argstrings */
     if (!shortarg && !longarg)
@@ -215,6 +214,10 @@ void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Arg
     /* Longarg must be two dashes followed by any number of additional characters */
     if (longarg && (strlen(longarg) <= 2 || longarg[0] !=  '-' || longarg[1] != '-'))
         argparser_abort(ap, "Longarg must be two dashes followed by any number of additional characters");
+
+    /* No null arg */
+    if (!arg)
+        argparser_abort(ap, "Passed NULL arg pointer to argparser_add");
 
     /* Copy argstrings */
     if (shortarg) {
@@ -255,9 +258,8 @@ void argparser_parse(argparser* ap) {
             int longmatch  = as->longarg  ? strcmp(ap->argv[i], as->longarg)  == 0 : 0;
 
             if (shortmatch || longmatch) {
-                /* Assign arg, if applicable */
-                if (as->arg) {
-                    switch (as->type) {
+                /* Assign arg */
+                switch (as->type) {
                     case ARGTYPE_INT:
                         if (i+1 < ap->argc) {
                             *(int*)as->arg = atoi(ap->argv[++i]);
@@ -279,11 +281,6 @@ void argparser_parse(argparser* ap) {
                     case ARGTYPE_BOOL:
                         *(int*)as->arg += 1;
                         as->parsed = 1;
-                    default:
-                        ;
-                    }
-                } else if (as->type == ARGTYPE_VOID) {
-                    as->parsed = 1;
                 }
             }
         }
@@ -309,11 +306,6 @@ void argparser_parse(argparser* ap) {
             argparser_abort(ap, "Failed to provide mandatory argument(s)");
         }
     }
-
-    /* Call callbacks, if applicable */
-    for (i = 0; i < (int)ap->size; i++)
-        if (ap->args[i].callback && ap->args[i].parsed)
-            ap->args[i].callback();
 
     /* Cleanup */
     argparser_destroy(ap);

@@ -32,14 +32,6 @@ void assert(int pred, const char* msg) {
         fprintf(stderr, "ERROR: %s\n", msg);
 }
 
-int help_func_called = 0;
-int verbose_func_called = 0;
-int string_func_called = 0;
-
-void help_func()    { help_func_called = 1; }
-void verbose_func() { verbose_func_called = 1; }
-void string_func()  { string_func_called = 1; }
-
 /*
  * For arguments that take values (such as -d, --double), you can
  * use any of the following formats:
@@ -55,6 +47,8 @@ void string_func()  { string_func_called = 1; }
  */
 
 int main(int argc, char* argv[]) {
+    int h = 0;
+    int v = 0;
     int i = 0;
     double d = 0.0;
     char s[50] = "Zero";
@@ -63,29 +57,28 @@ int main(int argc, char* argv[]) {
 
     argparser ap = argparser_create(argc, argv, PARSEMODE_STRICT);
 
-    argparser_add(&ap, "-h", "--help",    ARGTYPE_VOID,   NULL, help_func);
-    argparser_add(&ap, "-v", NULL,        ARGTYPE_VOID,   NULL, verbose_func);
-    argparser_add(&ap, NULL, "--integer", ARGTYPE_INT,    &i,   NULL);
-    argparser_add(&ap, "-d", "--double",  ARGTYPE_DOUBLE, &d,   NULL);
-    argparser_add(&ap, "-s", "--string",  ARGTYPE_STRING, &s,   string_func);
-    argparser_add(&ap, "-p", "--present", ARGTYPE_BOOL,   &p,   NULL);
-    argparser_add(&ap, "-f", "--flag",    ARGTYPE_BOOL,   &f,   NULL);
+    argparser_add(&ap, "-h", "--help",    ARGTYPE_BOOL,   &h);
+    argparser_add(&ap, "-v", NULL,        ARGTYPE_BOOL,   &v);
+    argparser_add(&ap, NULL, "--integer", ARGTYPE_INT,    &i);
+    argparser_add(&ap, "-d", "--double",  ARGTYPE_DOUBLE, &d);
+    argparser_add(&ap, "-s", "--string",  ARGTYPE_STRING, &s);
+    argparser_add(&ap, "-p", "--present", ARGTYPE_BOOL,   &p);
+    argparser_add(&ap, "-f", "--flag",    ARGTYPE_BOOL,   &f);
 
     argparser_parse(&ap);
 
     /* Args */
+    assert(h != 0,                 "h was not modified");
+    assert(v != 0,                 "v was not modified");
     assert(i != 0,                 "i was not modified");
     assert(d != 0.0,               "d was not modified");
     assert(strcmp(s, "Zero") != 0, "s was not modified");
     assert(p == 1,                 "p was not modified");
     assert(f == 1,                 "f was not modified");
 
-    /* Callbacks */
-    assert(help_func_called,    "help_func() was not called");
-    assert(verbose_func_called, "verbose_func() was not called");
-    assert(string_func_called,  "string_func() was not called");
-
     /* Print arg values */
+    fprintf(stdout, "h: %d\n", h);
+    fprintf(stdout, "v: %d\n", v);
     fprintf(stdout, "i: %d\n", i);
     fprintf(stdout, "d: %f\n", d);
     fprintf(stdout, "s: %s\n", s);

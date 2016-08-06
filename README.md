@@ -14,19 +14,18 @@ Adds an argument to the parser. There are six parameters to this function:
     + Must be a single dash followed by a single character (e.g. `-h`)
 + The longarg string
     + Must be two dashes followed by any number of additional characters (e.g. `--help`)
-+ An enum describing the type of argument. One of `ARGTYPE_INT`, `ARGTYPE_DOUBLE`, `ARGTYPE_STRING`, `ARGTYPE_BOOL`, or `ARGTYPE_VOID`
-+ A pointer containing the address of the variable you wish to populate. `NULL` can safely be passed if you're using `ARGTYPE_VOID`
-+ A callback function pointer. `NULL` can safely be passed if you don't need a callback.
++ An enum describing the type of argument. One of `ARGTYPE_INT`, `ARGTYPE_DOUBLE`, `ARGTYPE_STRING`, or `ARGTYPE_BOOL`
++ A pointer containing the address of the variable you wish to populate. Must be non-NULL.
 
 At least one of `shortarg` and `longarg` must be non-NULL strings, and neither can be the empty string.
 
 For example, the following line of code
 
-    argparser_add(&ap, "-h", "--help", ARGTYPE_VOID, NULL, help_callback);
+    argparser_add(&ap, "-h", "--help", ARGTYPE_VOID, &h);
     
-will register the arguments `-h` and `--help` and call the function `help_callback` once `argparser_parse` is called. Check out `test.c` for more.
+will register the arguments `-h` and `--help` and increment the variable h by one once `argparser_parse` is called. Check out `test.c` for more.
 
 ### argparser_parse
-Begins parsing the command line args, populating values and calling callbacks. All resources will be cleaned up at the end of this function call.
+Begins parsing the command line args, populating values. All resources will be cleaned up at the end of this function call.
 
     argparser_parse(&ap);

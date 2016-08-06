@@ -32,7 +32,6 @@ extern "C" {
 #include <stdlib.h>
 
 typedef enum {
-    ARGTYPE_VOID,
     ARGTYPE_INT,
     ARGTYPE_DOUBLE,
     ARGTYPE_STRING,
@@ -49,7 +48,6 @@ typedef struct {
     char* longarg;
     Argtype type;
     void* arg;
-    void (*callback)();
     int parsed;
 } argstruct;
 
@@ -63,7 +61,7 @@ typedef struct {
 } argparser;
 
 argparser argparser_create(int argc, char* argv[], Parsemode mode);
-void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Argtype type, void* arg, void (*callback)());
+void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Argtype type, void* arg);
 void argparser_parse(argparser* ap);
 
 #ifdef __cplusplus
