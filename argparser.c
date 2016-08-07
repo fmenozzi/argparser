@@ -175,7 +175,7 @@ static void print_help_string(argparser* ap) {
 
     fprintf(stdout, "Arguments:\n");
     fprintf(stdout, "%s-h, --help", leftpadstr);
-    for (i = 0; i < max_len + rightpad - strlen("-h, --help"); i++)
+    for (i = 0; i < (int)(max_len + rightpad - strlen("-h, --help")); i++)
         fprintf(stdout, " ");
     fprintf(stdout, "Show this help message and exit\n");
     for (i = 0; i < (int)ap->size; i++) {

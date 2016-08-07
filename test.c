@@ -47,21 +47,21 @@ void assert(int pred, const char* msg) {
  */
 
 int main(int argc, char* argv[]) {
-    int v = 0;
+    int v;
     int i = 0;
     double d = 0.0;
     char s[50] = "Zero";
-    int p = 0;
-    int f = 0;
+    int p;
+    int f;
 
     argparser ap = argparser_create(argc, argv, PARSEMODE_STRICT);
 
-    argparser_add(&ap, "-v", NULL,        ARGTYPE_BOOL,   &v);
-    argparser_add(&ap, NULL, "--integer", ARGTYPE_INT,    &i);
-    argparser_add(&ap, "-d", "--double",  ARGTYPE_DOUBLE, &d);
-    argparser_add(&ap, "-s", "--string",  ARGTYPE_STRING, &s);
-    argparser_add(&ap, "-p", "--present", ARGTYPE_BOOL,   &p);
-    argparser_add(&ap, "-f", "--flag",    ARGTYPE_BOOL,   &f);
+    argparser_add(&ap, "-v", NULL,        ARGTYPE_BOOL,   &v, "V arg");
+    argparser_add(&ap, NULL, "--integer", ARGTYPE_INT,    &i, "I arg");
+    argparser_add(&ap, "-d", "--double",  ARGTYPE_DOUBLE, &d, "D arg");
+    argparser_add(&ap, "-s", "--string",  ARGTYPE_STRING, &s, "S arg");
+    argparser_add(&ap, "-p", "--present", ARGTYPE_BOOL,   &p, "P arg");
+    argparser_add(&ap, "-f", "--flag",    ARGTYPE_BOOL,   &f, "F arg");
 
     argparser_parse(&ap);
 
