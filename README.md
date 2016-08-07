@@ -29,11 +29,11 @@ will register the arguments `-v` and `--verbose` and, once `argparser_parse` is 
 As an added convenience, a help string is automatically generated (and -h, --help args automatically provided) that pretty-prints the usage and help strings of each individual arg. For example, the following lines of code
 
 ```
-    int v;
+int v;
 
-    argparser ap = argparser_create(argc, argv, PARSEMODE_LENIENT);
-    argparser_add(&ap, "-v", "--verbose", ARGTYPE_BOOL, &v, "Display more information");
-    argparser_parse(&ap);
+argparser ap = argparser_create(argc, argv, PARSEMODE_LENIENT);
+argparser_add(&ap, "-v", "--verbose", ARGTYPE_BOOL, &v, "Display more information");
+argparser_parse(&ap);
 ```
 
 will display the following to the console and exit when no args are passed or one of `-h`, `--help` is passed:
