@@ -318,6 +318,9 @@ void argparser_add(argparser* ap, const char* shortarg, const char* longarg, Arg
         strcpy(as.helpstr, helpstr);
     }
 
+    if (as.type == ARGTYPE_BOOL)
+        *(int*)as.arg = 0;
+
     /* Add argstruct to dynamic array */
     if (ap->size < ap->cap) {
         ap->args[ap->size++] = as;
@@ -371,7 +374,7 @@ void argparser_parse(argparser* ap) {
                         }
                         break;
                     case ARGTYPE_BOOL:
-                        *(int*)as->arg += 1;
+                        *(int*)as->arg = 1;
                         as->parsed = 1;
                 }
             }
