@@ -376,6 +376,7 @@ void argparser_parse(argparser* ap) {
                     case ARGTYPE_BOOL:
                         *(int*)as->arg = 1;
                         as->parsed = 1;
+                        break;
                 }
             }
         }
