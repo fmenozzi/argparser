@@ -382,11 +382,8 @@ void argparser_parse(argparser* ap) {
         }
     }
 
-    /* Check if no args were passed, or if -h, --help was passed as only arg */
-    if (ap->argc == 1) {
-        print_help_string(ap);
-        help_passed = 1;
-    } else if (ap->argc == 2) {
+    /* Check if -h, --help was passed as only arg */
+    if (ap->argc == 2) {
         char* arg = ap->argv[1];
 
         int shorthelp = strcmp(arg, "-h") == 0;

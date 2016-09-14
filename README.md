@@ -36,7 +36,7 @@ argparser_add(&ap, "-v", "--verbose", ARGTYPE_BOOL, &v, "Display more informatio
 argparser_parse(&ap);
 ```
 
-will display the following to the console and exit when no args are passed or one of `-h`, `--help` is passed:
+will display the following to the console and exit when one of `-h`, `--help` is passed:
 
 ```
 Usage: <exe-name> [-h,--help] [-v,--verbose]
