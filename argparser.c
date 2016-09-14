@@ -392,10 +392,11 @@ void argparser_parse(argparser* ap) {
         int shorthelp = strcmp(arg, "-h") == 0;
         int longhelp  = strcmp(arg, "--help") == 0;
 
-        if (shorthelp || longhelp)
+        if (shorthelp || longhelp) {
             print_help_string(ap);
+            help_passed = 1;
+        }
 
-        help_passed = 1;
     }
 
     if (help_passed) {
