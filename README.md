@@ -22,9 +22,9 @@ At least one of `shortarg` and `longarg` must be non-NULL strings, and neither c
 
 For example, the following line of code
 
-    argparser_add(&ap, "-v", "--verbose", ARGTYPE_BOOL, &v);
+    argparser_add(&ap, "-v", "--verbose", ARGTYPE_BOOL, &v, "Display more information");
     
-will register the arguments `-v` and `--verbose` and, once `argparser_parse` is called, set the variable `v` to 1 if the arg was passed and 0 if it was not. Check out `test.c` for more.
+will register the arguments `-v` and `--verbose` and, once `argparser_parse` is called, set the variable `v` to 1 if the arg was passed and 0 if it was not. It will also set that arg's help string to `"Display more information"`. Check out `test.c` for more.
 
 As an added convenience, a help string is automatically generated (and `-h`, `--help` args automatically provided) that pretty-prints the usage and help strings of each individual arg. For example, the following lines of code
 
