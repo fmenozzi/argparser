@@ -82,7 +82,6 @@ static char** remove_equals(int* argc, char* argv[]) {
     return new_argv;
 }
 
-
 /*
  * Determine if arg is of form -abc
  */
@@ -393,7 +392,6 @@ void argparser_parse(argparser* ap) {
             print_help_string(ap);
             help_passed = 1;
         }
-
     }
 
     if (help_passed) {
