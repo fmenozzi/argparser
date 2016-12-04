@@ -78,20 +78,28 @@ namespace ap {
         int                                 m_argc;
         std::vector<std::string>            m_argv;
         std::vector<argstruct>              m_args;
+        // TODO: Is there a reason why we have a map instead of
+        //       just a vector of std::function?
         std::map<argstruct,
                  std::function<void(void)>> m_populate_args;
 
+        void remove_equals(std::vector<std::string>& argv) {
+            // TODO
+        }
+
+        void expand_shortargs(std::vector<std::string>& argv) {
+            // TODO
+        }
+
     public:
-        parser(int argc, char* argv[])
-            : m_argc(argc) {
-            
-            // Convert argv to vector<string>
+        parser(int argc, char* argv[]) {
             m_argv = std::vector<std::string>(argv, argv+argc);
 
-            // TODO: Reformat argv in case --arg=val notation is used
+            // Reformat argv in case --arg=val notation is used
+            remove_equals(m_argv);
             
-            // TODO: Expand shortargs in case -ab notation is used
-
+            // Expand shortargs in case -ab notation is used
+            expand_shortargs(m_argv);
         }
 
         template<typename T>
