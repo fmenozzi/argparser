@@ -103,7 +103,7 @@ namespace ap {
         }
 
         template<typename T>
-        void add(const std::string& shortarg,
+        bool add(const std::string& shortarg,
                  const std::string& longarg,
                  T* ptr,
                  const std::string& helpstr,
@@ -111,10 +111,11 @@ namespace ap {
 
             argstruct as(shortarg, longarg, helpstr, m, false);
 
+            return false;
         }
 
         bool parse() {
-
+            return false;
         }
     };
 }
