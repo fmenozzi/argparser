@@ -48,13 +48,13 @@ namespace ap {
         static bool convert(const std::string& s) { return s == "1" || s == "true"; }
     };
 
-    class parser {
-    public:
-        enum class mode {
-            REQUIRED,
-            OPTIONAL
-        };
+    // Designates whether given argument is optional or required
+    enum class mode {
+        REQUIRED,
+        OPTIONAL
+    };
 
+    class parser {
     private:
         struct argstruct {
             std::string shortarg;
