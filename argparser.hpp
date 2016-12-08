@@ -101,8 +101,32 @@ namespace ap {
             }
         }
 
+        bool is_multi_shortarg(const std::string& s) {
+            return s[0] == '-' && s[1] != '-' && s.size() > 2;
+        }
+
         void expand_shortargs(std::vector<std::string>& argv) {
-            // TODO
+            int new_argc = argv.size();
+            for (const auto& arg : argv) {
+                if (is_multi_shortarg(arg)) {
+                    new_argc += arg.size() - 2;
+                }
+            }
+
+            argv.reserve(new_argc);
+
+            auto it = argv.begin();
+            while (it != argv.end()) {
+                auto arg = *it;
+                if (is_multi_shortarg(arg)) {
+                    it = argv.erase(it);
+                    for (size_t i = arg.size()-1; i > 0; i--) {
+                        it = argv.insert(it, "-" + std::string(1, arg[i]));
+                    }
+                } else {
+                    ++it;
+                }
+            }
         }
 
     public:
