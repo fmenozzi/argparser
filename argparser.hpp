@@ -77,7 +77,7 @@ namespace ap {
         std::vector<argstruct>                 m_args;
         std::vector<std::function<void(void)>> m_populate_args;
 
-        void remove_equals(std::vector<std::string>& argv) {
+        void remove_equals(std::vector<std::string>& argv) const {
             int new_argc = std::count_if(argv.begin(), argv.end(), [](const std::string& s) {
                 return s.find("=") != std::string::npos;
             }) + argv.size();
@@ -101,11 +101,11 @@ namespace ap {
             }
         }
 
-        bool is_multi_shortarg(const std::string& s) {
+        bool is_multi_shortarg(const std::string& s) const noexcept{
             return s[0] == '-' && s[1] != '-' && s.size() > 2;
         }
 
-        void expand_shortargs(std::vector<std::string>& argv) {
+        void expand_shortargs(std::vector<std::string>& argv) const {
             int new_argc = argv.size();
             for (const auto& arg : argv) {
                 if (is_multi_shortarg(arg)) {
@@ -156,11 +156,11 @@ namespace ap {
             return false;
         }
 
-        int argc() const {
+        int argc() const noexcept {
             return m_argc;
         }
 
-        const std::vector<std::string>& argv() const {
+        const std::vector<std::string>& argv() const noexcept {
             return m_argv;
         }
     };
