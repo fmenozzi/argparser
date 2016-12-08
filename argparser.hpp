@@ -108,7 +108,7 @@ namespace ap {
         void expand_shortargs(std::vector<std::string>& argv) const {
             int new_argc = argv.size();
             for (const auto& arg : argv) {
-                if (is_multi_shortarg(arg)) {
+                if (this->is_multi_shortarg(arg)) {
                     new_argc += arg.size() - 2;
                 }
             }
@@ -118,7 +118,7 @@ namespace ap {
             auto it = argv.begin();
             while (it != argv.end()) {
                 auto arg = *it;
-                if (is_multi_shortarg(arg)) {
+                if (this->is_multi_shortarg(arg)) {
                     it = argv.erase(it);
                     for (size_t i = arg.size()-1; i > 0; i--) {
                         it = argv.insert(it, "-" + std::string(1, arg[i]));
@@ -134,10 +134,10 @@ namespace ap {
             m_argv = std::vector<std::string>(argv, argv+argc);
 
             // Reformat argv in case --arg=val notation is used
-            remove_equals(m_argv);
+            this->remove_equals(m_argv);
             
             // Expand shortargs in case -ab notation is used
-            expand_shortargs(m_argv);
+            this->expand_shortargs(m_argv);
         }
 
         template<typename T>
