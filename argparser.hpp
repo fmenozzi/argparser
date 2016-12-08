@@ -84,7 +84,27 @@ namespace ap {
                  std::function<void(void)>> m_populate_args;
 
         void remove_equals(std::vector<std::string>& argv) {
-            // TODO
+            int new_argc = std::count_if(argv.begin(), argv.end(), [](const std::string& s) {
+                return s.find("=") != std::string::npos;
+            }) + argv.size();
+
+            argv.reserve(new_argc);
+
+            auto it = argv.begin();
+            while (it != argv.end()) {
+                auto idx = it->find("=");
+                if (idx != std::string::npos) {
+                    auto arg = it->substr(0, idx);
+                    auto val = it->substr(idx+1);
+
+                    it = argv.erase(it);
+                    it = argv.insert(it, val);
+                    it = argv.insert(it, arg);
+                }
+                if (it != argv.end()) {
+                    ++it;
+                }
+            }
         }
 
         void expand_shortargs(std::vector<std::string>& argv) {
@@ -116,6 +136,14 @@ namespace ap {
 
         bool parse() {
             return false;
+        }
+
+        int argc() const {
+            return m_argc;
+        }
+
+        const std::vector<std::string>& argv() const {
+            return m_argv;
         }
     };
 }
