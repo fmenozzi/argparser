@@ -15,7 +15,7 @@ namespace ap {
         static long convert(const std::string& s) { return std::stol(s); }
     };
     template<> struct convert_from_string_to<unsigned long> {
-        static unsigned int convert(const std::string& s) { return std::stoul(s); }
+        static unsigned long convert(const std::string& s) { return std::stoul(s); }
     };
     template<> struct convert_from_string_to<long long> {
         static long long convert(const std::string& s) { return std::stoll(s); }
@@ -29,10 +29,10 @@ namespace ap {
         static float convert(const std::string& s) { return std::stof(s); }
     };
     template<> struct convert_from_string_to<double> {
-        static float convert(const std::string& s) { return std::stod(s); }
+        static double convert(const std::string& s) { return std::stod(s); }
     };
     template<> struct convert_from_string_to<long double> {
-        static float convert(const std::string& s) { return std::stold(s); }
+        static long double convert(const std::string& s) { return std::stold(s); }
     };
 
     // String conversion
@@ -101,7 +101,7 @@ namespace ap {
             }
         }
 
-        bool is_multi_shortarg(const std::string& s) const noexcept{
+        bool is_multi_shortarg(const std::string& s) const noexcept {
             return s[0] == '-' && s[1] != '-' && s.size() > 2;
         }
 
