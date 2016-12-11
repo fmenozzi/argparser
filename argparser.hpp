@@ -57,6 +57,8 @@ namespace ap {
         std::vector<argstruct>                 m_args;
         std::vector<std::function<void(void)>> m_populate_args;
 
+        bool m_any_adds_failed = false;
+
         void remove_equals(std::vector<std::string>& argv) const {
             int new_argc = std::count_if(argv.begin(), argv.end(), [](const std::string& s) {
                 return s.find("=") != std::string::npos;
@@ -127,12 +129,44 @@ namespace ap {
                  const std::string& helpstr,
                  mode m = mode::REQUIRED) {
 
+            // Can't have both argstrings be empty
+            if (shortarg.empty() && longarg.empty()) {
+                m_any_adds_failed = true;
+                return false;
+            }
+
+            // Argstrings must be formatted properly
+            if (shortarg.size() != 2 || shortarg[0] != '-' || shortarg[1] == '-') {
+                m_any_adds_failed = true;
+                return false;
+            }
+            if (longarg.size() <= 2 || longarg[0] != '-' || longarg[1] != '-') {
+                m_any_adds_failed = true;
+                return false;
+            }
+
+            // -h, --help are reserved
+            if (shortarg == "-h" || longarg == "--help") {
+                m_any_adds_failed = true;
+                return false;
+            }
+
+            // No empty help string
+            if (helpstr.empty()) {
+                m_any_adds_failed = true;
+                return false;
+            }
+
             argstruct as(shortarg, longarg, helpstr, m, false);
 
             return false;
         }
 
         bool parse() {
+            if (m_any_adds_failed) {
+                return false;
+            }
+
             return false;
         }
 
