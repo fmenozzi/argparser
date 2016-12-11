@@ -5,45 +5,24 @@
 
 namespace ap {
     // Default conversion template
-    template<typename T> struct convert_from_string_to {};
+    template<typename T> T convert_from_string_to(const std::string& s) {}
 
     // Integral conversions
-    template<> struct convert_from_string_to<int> {
-        static int convert(const std::string& s) { return std::stoi(s); }
-    };
-    template<> struct convert_from_string_to<long> {
-        static long convert(const std::string& s) { return std::stol(s); }
-    };
-    template<> struct convert_from_string_to<unsigned long> {
-        static unsigned long convert(const std::string& s) { return std::stoul(s); }
-    };
-    template<> struct convert_from_string_to<long long> {
-        static long long convert(const std::string& s) { return std::stoll(s); }
-    };
-    template<> struct convert_from_string_to<unsigned long long> {
-        static unsigned long long convert(const std::string& s) { return std::stoull(s); }
-    };
+    template<> int convert_from_string_to<int>(const std::string& s) { return std::stoi(s); }
+    template<> long convert_from_string_to<long>(const std::string& s) { return std::stol(s); }
+    template<> unsigned long convert_from_string_to<unsigned long>(const std::string& s) { return std::stoul(s); }
+    template<> unsigned long long convert_from_string_to<unsigned long long>(const std::string& s) { return std::stoull(s); }
 
     // Floating point conversions
-    template<> struct convert_from_string_to<float> {
-        static float convert(const std::string& s) { return std::stof(s); }
-    };
-    template<> struct convert_from_string_to<double> {
-        static double convert(const std::string& s) { return std::stod(s); }
-    };
-    template<> struct convert_from_string_to<long double> {
-        static long double convert(const std::string& s) { return std::stold(s); }
-    };
+    template<> float convert_from_string_to<float>(const std::string& s) { return std::stof(s); }
+    template<> double convert_from_string_to<double>(const std::string& s) { return std::stod(s); }
+    template<> long double convert_from_string_to<long double>(const std::string& s) { return std::stold(s); }
 
     // String conversion
-    template<> struct convert_from_string_to<std::string> {
-        static std::string convert(const std::string& s) { return s; }
-    };
+    template<> std::string convert_from_string_to<std::string>(const std::string& s) { return s; }
 
     // Boolean conversion
-    template<> struct convert_from_string_to<bool> {
-        static bool convert(const std::string& s) { return s == "1" || s == "true"; }
-    };
+    template<> bool convert_from_string_to<bool>(const std::string& s) { return s == "1" || s == "true"; }
 
     // Designates whether given argument is optional or required
     enum class mode {
