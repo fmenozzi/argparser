@@ -13,5 +13,5 @@ TEST_CASE("Test expand shortargs", "[expand shortargs]") {
 
     ap::parser p(argc, const_cast<char**>(argv));
     
-    REQUIRE(p.argv().size() == argc + 3); 
+    REQUIRE(p.argc() == argc + 3);
 }

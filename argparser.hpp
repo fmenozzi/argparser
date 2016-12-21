@@ -122,6 +122,8 @@ namespace ap {
             
             // Expand shortargs in case -ab notation is used
             this->expand_shortargs(m_argv);
+
+            m_argc = m_argv.size();
         }
 
         bool add(const std::string& shortarg,
