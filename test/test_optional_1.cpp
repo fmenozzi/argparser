@@ -9,12 +9,9 @@ TEST_CASE("Test optional args", "[optional]") {
         "-f", "First",
     };
 
-    std::string first, last;
-
     ap::parser p(argc, const_cast<char**>(argv));
-    p.add("-f", "--first", &first, "My first name");
-    p.add("-l", "--last",  &last,  "My last name", ap::mode::OPTIONAL);
-    bool success = p.parse();
+    p.add("-f", "--first", "My first name");
+    p.add("-l", "--last",  "My last name", ap::mode::OPTIONAL);
 
-    REQUIRE(success);
+    REQUIRE(p.parse());
 }

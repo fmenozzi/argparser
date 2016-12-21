@@ -10,9 +10,7 @@ TEST_CASE("Test empty help string", "[empty help string]") {
         "-abc",
     };
 
-    int i;
-
     ap::parser p(argc, const_cast<char**>(argv));
     
-    REQUIRE(!p.add("-g", "--good", &i, "")); 
+    REQUIRE(!p.add("-g", "--good", "")); 
 }

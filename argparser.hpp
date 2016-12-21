@@ -5,26 +5,6 @@
 #include <algorithm>
 
 namespace ap {
-    // Default conversion template
-    template<typename T> T convert_from_string_to(const std::string& s) {}
-
-    // Integral conversions
-    template<> int convert_from_string_to<int>(const std::string& s) { return std::stoi(s); }
-    template<> long convert_from_string_to<long>(const std::string& s) { return std::stol(s); }
-    template<> unsigned long convert_from_string_to<unsigned long>(const std::string& s) { return std::stoul(s); }
-    template<> unsigned long long convert_from_string_to<unsigned long long>(const std::string& s) { return std::stoull(s); }
-
-    // Floating point conversions
-    template<> float convert_from_string_to<float>(const std::string& s) { return std::stof(s); }
-    template<> double convert_from_string_to<double>(const std::string& s) { return std::stod(s); }
-    template<> long double convert_from_string_to<long double>(const std::string& s) { return std::stold(s); }
-
-    // String conversion
-    template<> std::string convert_from_string_to<std::string>(const std::string& s) { return s; }
-
-    // Boolean conversion
-    template<> bool convert_from_string_to<bool>(const std::string& s) { return s == "1" || s == "true"; }
-
     // Designates whether given argument is optional or required
     enum class mode {
         REQUIRED,
@@ -55,8 +35,6 @@ namespace ap {
         int                      m_argc;
         std::vector<std::string> m_argv;
         std::vector<argstruct>   m_args;
-
-        std::vector<std::function<void(const std::string&)>> m_populate_args;
 
         bool m_any_adds_failed = false;
 
@@ -124,10 +102,8 @@ namespace ap {
             this->expand_shortargs(m_argv);
         }
 
-        template<typename T>
         bool add(const std::string& shortarg,
                  const std::string& longarg,
-                 T* ptr,
                  const std::string& helpstr,
                  mode m = mode::REQUIRED) {
 
@@ -160,11 +136,6 @@ namespace ap {
             }
 
             argstruct as(shortarg, longarg, helpstr, m, false);
-
-            // Add conversion function (to be called in parse())
-            m_populate_args.emplace_back([ptr](const std::string& s) {
-                *ptr = convert_from_string_to<T>(s);
-            });
 
             return false;
         }

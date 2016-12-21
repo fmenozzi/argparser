@@ -8,11 +8,8 @@ TEST_CASE("Test required args", "[required]") {
         "test.exe"
     };
 
-    std::string name;
-
     ap::parser p(argc, const_cast<char**>(argv));
-    p.add("-n", "--name", &name, "My name");
-    bool success = p.parse();
+    p.add("-n", "--name", "My name");
     
-    REQUIRE(!success);
+    REQUIRE(!p.parse());
 }

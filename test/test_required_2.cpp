@@ -9,12 +9,9 @@ TEST_CASE("Test required args", "[required]") {
         "-f", "First",
     };
 
-    std::string first, last;
-
     ap::parser p(argc, const_cast<char**>(argv));
-    p.add("-f", "--first", &first, "My first name");
-    p.add("-l", "--last",  &last,  "My last name");
-    bool success = p.parse();
+    p.add("-f", "--first", "My first name");
+    p.add("-l", "--last",  "My last name");
     
-    REQUIRE(!success);
+    REQUIRE(!p.parse());
 }
