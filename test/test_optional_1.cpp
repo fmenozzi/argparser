@@ -13,5 +13,5 @@ TEST_CASE("Test optional args", "[optional]") {
     p.add("-f", "--first", "My first name");
     p.add("-l", "--last",  "My last name", ap::mode::OPTIONAL);
 
-    REQUIRE(p.parse());
+    REQUIRE(p.parse().success());
 }

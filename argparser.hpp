@@ -1,14 +1,36 @@
 #pragma once
 
 #include <vector>
+
 #include <string>
 #include <algorithm>
+#include <map>
 
 namespace ap {
     // Designates whether given argument is optional or required
     enum class mode {
         REQUIRED,
         OPTIONAL
+    };
+
+    // Object returned from parse()
+    class argmap {
+    private:
+        std::map<std::string, std::string> m_args;
+        bool m_success;
+
+    public:
+        argmap(const std::map<std::string, std::string>& args, bool success)
+            : m_args(args)
+            , m_success(success) {}
+
+        const std::string& operator[](const std::string& argstr) {
+            return m_args[argstr];
+        }
+
+        bool success() const noexcept {
+            return m_success;
+        }
     };
 
     class parser {
@@ -140,12 +162,15 @@ namespace ap {
             return false;
         }
 
-        bool parse() {
+        argmap parse() {
+            std::map<std::string, std::string> map;
+            bool success = true;
+
             if (m_any_adds_failed) {
-                return false;
+                success = false;
             }
 
-            return false;
+            return argmap(map, success);
         }
 
         int argc() const noexcept {
