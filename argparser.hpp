@@ -52,13 +52,15 @@ namespace ap {
                 , parsed(ps) {}
         };
 
-        int                                    m_argc;
-        std::vector<std::string>               m_argv;
-        std::vector<argstruct>                 m_args;
-        std::vector<std::function<void(void)>> m_populate_args;
+        int                      m_argc;
+        std::vector<std::string> m_argv;
+        std::vector<argstruct>   m_args;
+
+        std::vector<std::function<void(const std::string&)>> m_populate_args;
 
         bool m_any_adds_failed = false;
 
+    private:
         void remove_equals(std::vector<std::string>& argv) const {
             int new_argc = std::count_if(argv.begin(), argv.end(), [](const std::string& s) {
                 return s.find("=") != std::string::npos;
@@ -158,6 +160,11 @@ namespace ap {
             }
 
             argstruct as(shortarg, longarg, helpstr, m, false);
+
+            // Add conversion function (to be called in parse())
+            m_populate_args.emplace_back([ptr](const std::string& s) {
+                *ptr = convert_from_string_to<T>(s);
+            });
 
             return false;
         }
