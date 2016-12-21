@@ -7,12 +7,6 @@
 #include <map>
 
 namespace ap {
-    // Designates whether given argument is optional or required
-    enum class mode {
-        REQUIRED,
-        OPTIONAL
-    };
-
     // Object returned from parse()
     class argmap {
     private:
@@ -39,17 +33,20 @@ namespace ap {
             std::string shortarg;
             std::string longarg;
             std::string helpstr;
-            mode        required;
+            bool        booltype;
+            bool        required;
             bool        parsed;
 
             argstruct(const std::string& sa,
                       const std::string& la,
                       const std::string& hs,
-                      mode rq,
+                      bool bt,
+                      bool rq,
                       bool ps)
                 : shortarg(sa)
                 , longarg(la)
                 , helpstr(hs)
+                , booltype(bt)
                 , required(rq)
                 , parsed(ps) {}
         };
@@ -129,7 +126,8 @@ namespace ap {
         bool add(const std::string& shortarg,
                  const std::string& longarg,
                  const std::string& helpstr,
-                 mode m = mode::REQUIRED) {
+                 bool booltype=false,
+                 bool required=true) {
 
             // Can't have both argstrings be empty
             if (shortarg.empty() && longarg.empty()) {
@@ -159,7 +157,7 @@ namespace ap {
                 return false;
             }
 
-            argstruct as(shortarg, longarg, helpstr, m, false);
+            argstruct as(shortarg, longarg, helpstr, booltype, required, false);
 
             return false;
         }
