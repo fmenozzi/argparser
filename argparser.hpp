@@ -136,11 +136,11 @@ namespace ap {
             }
 
             // Argstrings must be formatted properly
-            if (shortarg.size() != 2 || shortarg[0] != '-' || shortarg[1] == '-') {
+            if (!shortarg.empty() && (shortarg.size() != 2 || shortarg[0] != '-' || shortarg[1] == '-')) {
                 m_any_adds_failed = true;
                 return false;
             }
-            if (longarg.size() <= 2 || longarg[0] != '-' || longarg[1] != '-') {
+            if (!longarg.empty() && (longarg.size() <= 2 || longarg[0] != '-' || longarg[1] != '-')) {
                 m_any_adds_failed = true;
                 return false;
             }
@@ -157,9 +157,9 @@ namespace ap {
                 return false;
             }
 
-            argstruct as(shortarg, longarg, helpstr, booltype, required, false);
+            m_args.emplace_back(shortarg, longarg, helpstr, booltype, required, false);
 
-            return false;
+            return true;
         }
 
         argmap parse() {
@@ -168,6 +168,49 @@ namespace ap {
 
             if (m_any_adds_failed) {
                 success = false;
+            } else {
+                // Check if -h, --help was passed as only arg
+                if (m_argc == 2 && (m_argv[1] == "-h" || m_argv[1] == "--help")) {
+                    // TODO: Print help string
+                }
+
+                // Initialize all booltype args to false
+                for (const auto& arg : m_args) {
+                    if (arg.booltype) {
+                        map[arg.shortarg] = "0";
+                        map[arg.longarg]  = "0";
+                    }
+                }
+
+                // Assign args
+                for (int i = 0; i < m_argc; i++) {
+                    for (auto& as : m_args) {
+                        if (as.shortarg == m_argv[i] || as.longarg == m_argv[i]) {
+                            if (as.booltype) {
+                                map[as.shortarg] = "1";
+                                map[as.longarg]  = "1";
+
+                                as.parsed = true;
+                            } else if (i+1 < m_argc) {
+                                map[as.shortarg] = m_argv[i+1];
+                                map[as.longarg]  = m_argv[i+1];
+
+                                as.parsed = true;
+
+                                i++;
+                            }
+                        }
+                    }
+                }
+                map.erase("");
+
+                // Check for required args
+                for (const auto& as : m_args) {
+                    if (as.required && !as.parsed) {
+                        success = false;
+                        break;
+                    }
+                }
             }
 
             return argmap(map, success);
