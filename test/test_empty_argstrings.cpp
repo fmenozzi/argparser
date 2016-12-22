@@ -11,6 +11,5 @@ TEST_CASE("Test empty argstrings", "[empty argstrings]") {
     };
 
     ap::parser p(argc, const_cast<char**>(argv));
-    
     REQUIRE(!p.add("", "", "Help string"));
 }

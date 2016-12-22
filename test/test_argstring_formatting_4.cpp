@@ -11,6 +11,5 @@ TEST_CASE("Test argstring formatting", "[argstring formatting]") {
     };
 
     ap::parser p(argc, const_cast<char**>(argv));
-    
     REQUIRE(!p.add("-g", "bad", "Help string"));
 }

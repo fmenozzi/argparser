@@ -11,8 +11,8 @@ TEST_CASE("Test arg assignments", "[assignments]") {
     };
 
     ap::parser p(argc, const_cast<char**>(argv));
-    p.add("-f", "--first", "My first name");
-    p.add("-l", "--last",  "My last name");
+    REQUIRE(p.add("-f", "--first", "My first name"));
+    REQUIRE(p.add("-l", "--last",  "My last name"));
     auto args = p.parse();
 
     REQUIRE(args.success());

@@ -13,10 +13,10 @@ TEST_CASE("Test arg assignments", "[assignments]") {
     };
 
     ap::parser p(argc, const_cast<char**>(argv));
-    p.add("-f", "--first", "My first name");
-    p.add("-l", "--last",  "My last name");
-    p.add("", "--boolean", "My boolean var", true);
-    p.add("-s", "", "My string var")
+    REQUIRE(p.add("-f", "--first", "My first name"));
+    REQUIRE(p.add("-l", "--last",  "My last name"));
+    REQUIRE(p.add("", "--boolean", "My boolean var", true));
+    REQUIRE(p.add("-s", "", "My string var"));
     auto args = p.parse();
 
     REQUIRE(args.success());

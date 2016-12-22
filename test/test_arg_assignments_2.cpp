@@ -10,7 +10,7 @@ TEST_CASE("Test arg assignments", "[assignments]") {
     };
 
     ap::parser p(argc, const_cast<char**>(argv));
-    p.add("-b", "--boolean", "My boolean value", true);
+    REQUIRE(p.add("-b", "--boolean", "My boolean value", true));
     auto args = p.parse();
 
     REQUIRE(args.success());
