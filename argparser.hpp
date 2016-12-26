@@ -9,6 +9,12 @@
 #include <cstdio>
 
 namespace ap {
+    enum class mode {
+        REQUIRED,
+        OPTIONAL,
+        BOOLEAN,
+    };
+
     // Object returned from parse()
     class argmap {
     private:
@@ -197,8 +203,7 @@ namespace ap {
         bool add(const std::string& shortarg,
                  const std::string& longarg,
                  const std::string& helpstr,
-                 bool booltype=false,
-                 bool required=true) {
+                 mode m=mode::OPTIONAL) {
 
             // Can't have both argstrings be empty
             if (shortarg.empty() && longarg.empty()) {
@@ -227,6 +232,9 @@ namespace ap {
                 m_any_adds_failed = true;
                 return false;
             }
+
+            bool booltype = (m == mode::BOOLEAN);
+            bool required = (m == mode::REQUIRED);
 
             m_args.emplace_back(shortarg, longarg, helpstr, booltype, required, false);
 

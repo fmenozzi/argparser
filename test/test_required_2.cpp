@@ -10,8 +10,8 @@ TEST_CASE("Test required args", "[required]") {
     };
 
     ap::parser p(argc, const_cast<char**>(argv));
-    REQUIRE(p.add("-f", "--first", "My first name"));
-    REQUIRE(p.add("-l", "--last",  "My last name"));
+    REQUIRE(p.add("-f", "--first", "My first name", ap::mode::REQUIRED));
+    REQUIRE(p.add("-l", "--last",  "My last name",  ap::mode::REQUIRED));
     
     REQUIRE(!p.parse().success());
 }
