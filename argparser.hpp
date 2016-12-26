@@ -9,6 +9,7 @@
 #include <cstdio>
 
 namespace ap {
+    // Behavior for individual args passed to add()
     enum class mode {
         REQUIRED,
         OPTIONAL,
@@ -253,12 +254,13 @@ namespace ap {
                     this->print_help_string();
                 }
 
-                // Initialize all booltype args to false
+                // Initialize all booltype args to false and all other
+                // args to the empty string
                 for (const auto& arg : m_args) {
-                    if (arg.booltype) {
-                        map[arg.shortarg] = "0";
-                        map[arg.longarg]  = "0";
-                    }
+                    auto default_val = arg.booltype ? "0" : "";
+
+                    map[arg.shortarg] = default_val;
+                    map[arg.longarg]  = default_val;
                 }
 
                 // Assign args
