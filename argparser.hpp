@@ -119,7 +119,7 @@ namespace ap {
             }
         }
 
-        void print_help_string() {
+        void print_help_string() const {
             int help_len = std::string("-h, --help").size();
 			int max_len = help_len;
 			int rightpad = 4;
