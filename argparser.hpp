@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <map>
 
+#include <cstdio>
+
 namespace ap {
     // Object returned from parse()
     class argmap {
@@ -110,6 +112,75 @@ namespace ap {
             }
         }
 
+        void print_help_string() {
+            int help_len = std::string("-h, --help").size();
+			int max_len = help_len;
+			int rightpad = 4;
+
+			const char* leftpadstr = "    ";
+
+            // Print usage line
+			fprintf(stdout, "Usage: %s [-h,--help] ", m_argv[0].c_str());
+			for (const auto& as : m_args) {
+				auto sa = as.shortarg;
+                auto la = as.longarg;
+
+                auto lbrak = as.required ? "" : "[";
+                auto rbrak = as.required ? "" : "]";
+
+				if (!sa.empty()) {
+					if (!la.empty()) {
+						fprintf(stdout, "%s%s,%s%s ", lbrak, sa.c_str(), la.c_str(), rbrak);
+                    } else {
+						fprintf(stdout, "%s%s%s ", lbrak, sa.c_str(), rbrak);
+                    }
+				} else {
+					fprintf(stdout, "%s%s%s ", lbrak, la.c_str(), rbrak);
+				}
+			}
+			fprintf(stdout, "\n\n");
+
+            // Determine max len
+            for (const auto& as : m_args) {
+				int shortlen = as.shortarg.empty() ? 0 : as.shortarg.size();
+				int longlen  = as.longarg.empty()  ? 0 : as.longarg.size();
+
+				int arg_len = (shortlen && longlen) ? (shortlen + 2 + longlen) : (shortlen + longlen);
+				if (arg_len > max_len)
+					max_len = arg_len;
+			}
+
+			fprintf(stdout, "Arguments:\n");
+			fprintf(stdout, "%s-h, --help", leftpadstr);
+			for (int i = 0; i < (int)(max_len + rightpad - help_len); i++) {
+				fprintf(stdout, " ");
+            }
+			fprintf(stdout, "Show this help message and exit\n");
+            for (const auto& as : m_args) {
+				auto sa = as.shortarg;
+                auto la = as.longarg;
+
+				if (!sa.empty()) {
+					if (!la.empty()) {
+						fprintf(stdout, "%s%s, %s", leftpadstr, sa.c_str(), la.c_str());
+                    } else {
+						fprintf(stdout, "%s%s", leftpadstr, sa.c_str());
+                    }
+				} else {
+					fprintf(stdout, "%s%s", leftpadstr, la.c_str());
+				}
+
+				int shortlen = sa.empty() ? 0 : sa.size();
+				int longlen = la.empty() ? 0 : la.size();
+				int arg_len = (shortlen && longlen) ? (shortlen + 2 + longlen) : (shortlen + longlen);
+				for (int j = 0; j < max_len + rightpad - arg_len; j++) {
+					fprintf(stdout, " ");
+				}
+
+				fprintf(stdout, "%s\n", as.helpstr.c_str());
+			}
+        }
+
     public:
         parser(int argc, char* argv[]) {
             m_argv = std::vector<std::string>(argv, argv+argc);
@@ -171,7 +242,7 @@ namespace ap {
             } else {
                 // Check if -h, --help was passed as only arg
                 if (m_argc == 2 && (m_argv[1] == "-h" || m_argv[1] == "--help")) {
-                    // TODO: Print help string
+                    this->print_help_string();
                 }
 
                 // Initialize all booltype args to false
