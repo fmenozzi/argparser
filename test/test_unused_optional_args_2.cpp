@@ -14,7 +14,7 @@ TEST_CASE("Test unused optional args", "[unused]") {
     REQUIRE(p.add("-l", "--last",  "My last name"));
     auto args = p.parse();
 
-    REQUIRE(args.success());
+    REQUIRE(args.parsed_successfully());
 
     REQUIRE(args["-f"] == args["--first"]);
     REQUIRE(args["-f"] == "");

@@ -13,5 +13,5 @@ TEST_CASE("Test required args", "[required]") {
     REQUIRE(p.add("-f", "--first", "My first name", ap::mode::REQUIRED));
     REQUIRE(p.add("-l", "--last",  "My last name",  ap::mode::REQUIRED));
     
-    REQUIRE(!p.parse().success());
+    REQUIRE(!p.parse().parsed_successfully());
 }

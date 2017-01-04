@@ -15,7 +15,7 @@ TEST_CASE("Test arg assignments", "[assignments]") {
     REQUIRE(p.add("-l", "--last",  "My last name",  ap::mode::REQUIRED));
     auto args = p.parse();
 
-    REQUIRE(args.success());
+    REQUIRE(args.parsed_successfully());
 
     REQUIRE(args["-f"] == args["--first"]);
     REQUIRE(args["-f"] == "First");

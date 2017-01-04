@@ -13,7 +13,7 @@ TEST_CASE("Test arg assignments", "[assignments]") {
     REQUIRE(p.add("-b", "--boolean", "My boolean value", ap::mode::BOOLEAN));
     auto args = p.parse();
 
-    REQUIRE(args.success());
+    REQUIRE(args.parsed_successfully());
 
     REQUIRE(args["-b"] == args["--boolean"]);
     REQUIRE(args["-b"] == "1");

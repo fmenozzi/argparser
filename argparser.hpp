@@ -21,20 +21,20 @@ namespace ap {
     // Object returned from parse()
     class argmap {
     private:
-        std::map<std::string, std::string> m_args;
-        bool m_success;
+        std::map<std::string, std::string> args;
+        bool success;
 
     public:
         argmap(const std::map<std::string, std::string>& args, bool success)
-            : m_args(args)
-            , m_success(success) {}
+            : args(args)
+            , success(success) {}
 
         const std::string& operator[](const std::string& argstr) {
-            return m_args[argstr];
+            return args[argstr];
         }
 
-        bool success() const noexcept {
-            return m_success;
+        bool parsed_successfully() const noexcept {
+            return success;
         }
     };
 

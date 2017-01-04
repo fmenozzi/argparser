@@ -13,5 +13,5 @@ TEST_CASE("Test optional args", "[optional]") {
     REQUIRE(p.add("-f", "--first", "My first name"));
     REQUIRE(p.add("-l", "--last",  "My last name"));
 
-    REQUIRE(p.parse().success());
+    REQUIRE(p.parse().parsed_successfully());
 }
