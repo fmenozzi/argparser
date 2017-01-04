@@ -1,7 +1,9 @@
 #pragma once
 
-#include <vector>
+#ifndef ARGPARSER_HPP_
+#define ARGPARSER_HPP_
 
+#include <vector>
 #include <string>
 #include <algorithm>
 #include <map>
@@ -306,3 +308,5 @@ namespace ap {
         }
     };
 }
+
+#endif // ARGPARSER_HPP_
