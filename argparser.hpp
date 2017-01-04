@@ -9,6 +9,7 @@
 #include <map>
 
 #include <cstdio>
+#include <cstdlib>
 
 namespace ap {
     // Behavior for individual args passed to add()
@@ -248,14 +249,15 @@ namespace ap {
             std::map<std::string, std::string> map;
             bool success = true;
 
+            bool help_passed = false;
+
             if (m_any_adds_failed) {
                 success = false;
-            } else {
+            } else if (m_argc == 2 && (m_argv[1] == "-h" || m_argv[1] == "--help")) {
                 // Check if -h, --help was passed as only arg
-                if (m_argc == 2 && (m_argv[1] == "-h" || m_argv[1] == "--help")) {
-                    this->print_help_string();
-                }
-
+                this->print_help_string();
+                std::exit(EXIT_SUCCESS);
+            } else {
                 // Initialize all booltype args to false and all other
                 // args to the empty string
                 for (const auto& arg : m_args) {
