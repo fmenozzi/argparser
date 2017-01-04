@@ -50,8 +50,7 @@ Compile:
     
 Run:
 
-`./example -h:`
-
+	$ ./example -h:
 	Usage: ./example [-h,--help] -f,--firstname -l,--lastname [-v,--verbose] [-s,--salutation] 
     
     Arguments:
@@ -61,20 +60,32 @@ Run:
         -v, --verbose       Verbose output
         -s, --salutation    Salutation
 
-`./example -f John --lastname=Doe`
-
+	$ ./example -f John --lastname=Doe
 	Hello, John
 
-`./example -f John --lastname=Doe -v`
-
+	$ ./example -f John --lastname=Doe -v
     Hello, John Doe!
     
-`./example -f John --lastname=Doe -v --salutation=Hey`
-
+	$ ./example -f John --lastname=Doe -v --salutation=Hey
 	Hey, John Doe!
+	
+	$ ./example
+	Unsuccessful parse
+	
+	$ ./example -f John
+	Unsuccessful parse
+	
+	$ ./example -l Doe
+	Unsuccessful parse
 
 ## Details
-
+* `ap::parser::parse()` returns map-like object that provides read-only access to parsed arguments
+* Args have one of three modes
+	* `ap::mode::OPTIONAL`: Arg may or may not be populated (default mode)
+		* Unused args are assigned the empty string
+	* `ap::mode::REQUIRED`: Failure to populate arg results in unsuccessful parse
+	* `ap::mode::BOOLEAN`: Used to track presence or absence of arg (i.e. does not populate value)
+		* Value in resulting map is `"1"` if arg was passed and `"0"` otherwise
 * Args can be assigned either with a space or an equals sign
 	* In above example, `-f`, `--firstname` can be assigned values using any of the following schemes:
 		* `./example -f John`
