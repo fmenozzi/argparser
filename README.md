@@ -50,7 +50,7 @@ Compile:
     
 Run:
 
-	$ ./example -h:
+	$ ./example -h
 	Usage: ./example [-h,--help] -f,--firstname -l,--lastname [-v,--verbose] [-s,--salutation] 
     
     Arguments:
