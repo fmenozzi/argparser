@@ -290,11 +290,9 @@ namespace ap {
                 map.erase("");
 
                 // Check for required args
-                for (const auto& as : m_args) {
-                    if (as.required && !as.parsed) {
-                        success = false;
-                        break;
-                    }
+                auto is_unparsed = [](const argstruct& as) { return as.required && !as.parsed; };
+                if (std::any_of(m_args.begin(), m_args.end(), is_unparsed)) {
+                    success = false;
                 }
             }
 
