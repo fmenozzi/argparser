@@ -85,7 +85,9 @@ namespace ap {
                     auto val = it->substr(idx+1);
 
                     it = argv.erase(it);
-                    it = argv.insert(it, val);
+                    if (!val.empty()) {
+                        it = argv.insert(it, val);
+                    }
                     it = argv.insert(it, arg);
                 }
                 if (it != argv.end()) {
@@ -258,41 +260,49 @@ namespace ap {
                 this->print_help_string();
                 std::exit(EXIT_SUCCESS);
             } else {
-                // Initialize all booltype args to false and all other
-                // args to the empty string
-                for (const auto& arg : m_args) {
-                    auto default_val = arg.booltype ? "0" : "";
+                // Check for rogue "="
+                auto is_rogue_equal = [](const std::string& s) { return s == "="; };
+                if (std::any_of(m_argv.begin(), m_argv.end(), is_rogue_equal)) {
+                    success = false;
+                } else {
+                    // Initialize all booltype args to false and all other
+                    // args to the empty string
+                    for (const auto& arg : m_args) {
+                        auto default_val = arg.booltype ? "0" : "";
 
-                    map[arg.shortarg] = default_val;
-                    map[arg.longarg]  = default_val;
-                }
+                        map[arg.shortarg] = default_val;
+                        map[arg.longarg]  = default_val;
+                    }
 
-                // Assign args
-                for (int i = 0; i < m_argc; i++) {
-                    for (auto& as : m_args) {
-                        if (as.shortarg == m_argv[i] || as.longarg == m_argv[i]) {
-                            if (as.booltype) {
-                                map[as.shortarg] = "1";
-                                map[as.longarg]  = "1";
+                    // Assign args
+                    for (int i = 1; i < m_argc; i++) {
+                        for (auto& as : m_args) {
+                            if (as.shortarg == m_argv[i] || as.longarg == m_argv[i]) {
+                                std::string val;
+                                if (as.booltype) {
+                                    val = "1";
+                                } else if (i+1 < m_argc) {
+                                    val = m_argv[++i];
+                                } else {
+                                    success = false;
+                                }
+
+                                map[as.shortarg] = val;
+                                map[as.longarg]  = val;
 
                                 as.parsed = true;
-                            } else if (i+1 < m_argc) {
-                                map[as.shortarg] = m_argv[i+1];
-                                map[as.longarg]  = m_argv[i+1];
-
-                                as.parsed = true;
-
-                                i++;
                             }
                         }
                     }
-                }
-                map.erase("");
-
-                // Check for required args
-                auto is_unparsed = [](const argstruct& as) { return as.required && !as.parsed; };
-                if (std::any_of(m_args.begin(), m_args.end(), is_unparsed)) {
-                    success = false;
+                    map.erase("");
+    
+                    if (success) {
+                        // Check for required args
+                        auto is_unparsed = [](const argstruct& as) { return as.required && !as.parsed; };
+                        if (std::any_of(m_args.begin(), m_args.end(), is_unparsed)) {
+                            success = false;
+                        }
+                    }
                 }
             }
 
