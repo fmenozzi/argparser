@@ -239,6 +239,15 @@ namespace ap {
                 return false;
             }
 
+            // No duplicate short/long args
+            auto has_duplicate_args = [&](const argstruct& as) {
+                return as.shortarg == shortarg || as.longarg == longarg;
+            };
+            if (std::count_if(m_args.begin(), m_args.end(), has_duplicate_args) > 0) {
+                m_any_adds_failed = true;
+                return false;
+            }
+
             bool booltype = (m == mode::BOOLEAN);
             bool required = (m == mode::REQUIRED);
 
