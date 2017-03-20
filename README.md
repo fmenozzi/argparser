@@ -29,7 +29,7 @@ int main(int argc, char* argv[]) {
     auto first = args["-f"];
     auto last  = args["--lastname"];
 
-	// Optional args are empty if not specified
+    // Optional args are empty if not specified
     auto salutation = (args["-s"].empty() ? "Hello" : args["-s"]);
     
     if (std::stoi(args["-v"])) {
